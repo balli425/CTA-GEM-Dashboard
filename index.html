@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>築匠建築師事務所(CTArch)</title>
+<style>
+  :root {
+    --navy:#0f172a; --navy2:#1e293b; --orange:#ea7317; --orange2:#f59e0b;
+    --blue:#2563eb; --purple:#7c3aed; --green:#059669;
+    --bg:#f8fafc; --card:#ffffff; --border:#e2e8f0;
+    --text:#0f172a; --muted:#64748b;
+    --radius:14px;
+    --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.12);
+    --shadow-hover:0 4px 12px rgba(15,23,42,.08),0 20px 40px -16px rgba(15,23,42,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1440px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:.5px}
+  .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--navy),var(--orange));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px}
+  .logo-mark svg{width:18px;height:18px}
+  .logo small{color:var(--muted);font-weight:400;font-size:13px;margin-left:6px}
+  .topbar-spacer{flex:1}
+  .search-box{position:relative;width:320px}
+  .search-box input{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:14px;transition:.2s}
+  .search-box input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(234,115,23,.1)}
+  .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+
+  .hero{max-width:1440px;margin:0 auto;padding:48px 28px 24px}
+  .hero h1{font-size:36px;font-weight:800;letter-spacing:-.5px;color:var(--navy);margin-bottom:8px}
+  .hero h1 .accent{background:linear-gradient(120deg,var(--orange),var(--orange2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:16px;color:var(--muted);max-width:720px}
+  .hero-meta{margin-top:18px;display:flex;gap:24px;flex-wrap:wrap}
+  .stat{display:flex;align-items:baseline;gap:6px}
+  .stat .num{font-size:26px;font-weight:800;color:var(--navy)}
+  .stat .lbl{font-size:13px;color:var(--muted)}
+
+  .controls{max-width:1440px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+  .chip{padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:#fff;font-size:13px;color:var(--muted);transition:.2s;font-weight:500}
+  .chip:hover{border-color:var(--navy);color:var(--navy)}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+  .chip .count{opacity:.7;margin-left:4px;font-size:11px}
+
+  .mode-toggle{display:flex;border:1px solid var(--border);border-radius:10px;background:#fff;overflow:hidden}
+  .mode-btn{padding:8px 14px;font-size:13px;color:var(--muted);border-right:1px solid var(--border);display:flex;align-items:center;gap:6px;transition:.2s}
+  .mode-btn:last-child{border-right:0}
+  .mode-btn:hover{color:var(--navy)}
+  .mode-btn.active{background:var(--navy);color:#fff}
+  .mode-btn svg{width:14px;height:14px}
+
+  .grid{max-width:1440px;margin:0 auto;padding:8px 28px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+  .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;transition:.25s;box-shadow:var(--shadow)}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:transparent}
+  .visual{position:relative;aspect-ratio:16/10;background:#f1f5f9;overflow:hidden;cursor:pointer;user-select:none}
+
+  /* 底圖層（唯一全覆蓋的規則）*/
+  .layer-before, .layer-after{position:absolute;inset:0;width:100%;height:100%}
+  .visual img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .missing{display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:12px;background:#f1f5f9}
+
+  /* Slider */
+  .slider-mode .layer-after{clip-path:inset(0 0 0 50%);transition:none}
+  .slider-mode .divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:rgba(255,255,255,.95);box-shadow:0 0 0 1px rgba(15,23,42,.2);cursor:ew-resize;z-index:3;transform:translateX(-50%)}
+  .slider-mode .divider::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;background:#fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:ew-resize}
+  .slider-mode .divider::before{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;font-size:14px;color:var(--navy);font-weight:700}
+
+  /* Hover：只顯示當下階段的 label，點擊開啟 Lightbox */
+  .hover-mode .visual{cursor:zoom-in}
+  .hover-mode .layer-after{opacity:0;transition:opacity .4s ease}
+  .hover-mode .visual:hover .layer-after{opacity:1}
+  .hover-mode .divider{display:none}
+  .hover-mode .label{transition:opacity .25s ease}
+  .hover-mode .visual .label-after{opacity:0}
+  .hover-mode .visual:hover .label-before{opacity:0}
+  .hover-mode .visual:hover .label-after{opacity:1}
+
+
+  /* Labels（獨立 class，不與底圖層混用）*/
+  .label{position:absolute;top:10px;padding:3px 10px;font-size:11px;font-weight:600;color:#fff;border-radius:999px;backdrop-filter:blur(8px);z-index:2;letter-spacing:.5px;width:auto;height:auto;inset:auto}
+  .label-before{left:10px;background:rgba(15,23,42,.7)}
+  .label-after{right:10px;background:rgba(234,115,23,.85)}
+
+  .content{padding:18px 18px 16px;flex:1;display:flex;flex-direction:column}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:10px;width:fit-content}
+  .badge.arch{background:#dbeafe;color:#1e40af}
+  .badge.interior{background:#fce7f3;color:#9d174d}
+  .badge.id{background:#ede9fe;color:#5b21b6}
+  .badge.doc{background:#ccfbf1;color:#115e59}
+  .badge.photo{background:#fef3c7;color:#92400e}
+  .title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.4}
+  .desc{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:14px;flex:1}
+  .btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;background:var(--navy);color:#fff;border-radius:10px;font-size:13px;font-weight:600;transition:.2s}
+  .btn:hover{background:var(--orange);transform:translateY(-1px)}
+  .btn svg{width:14px;height:14px}
+
+  /* Lightbox overlay */
+  .lightbox-overlay{position:fixed;inset:0;background:rgba(15,23,42,.92);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:40px}
+  .lightbox-overlay.show{display:flex}
+  .lightbox-content{max-width:1200px;width:100%;background:#fff;border-radius:16px;overflow:hidden;position:relative;max-height:92vh;display:flex;flex-direction:column}
+  .lightbox-close{position:absolute;top:16px;right:16px;width:36px;height:36px;background:rgba(15,23,42,.5);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:5;font-size:20px}
+  .lightbox-close:hover{background:rgba(15,23,42,.8)}
+  .lightbox-visual{position:relative;aspect-ratio:16/9;background:#0f172a;overflow:hidden;user-select:none}
+  .lightbox-visual img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
+  .lightbox-body{padding:20px 28px 24px;overflow-y:auto}
+  .lightbox-body h3{font-size:22px;margin-bottom:6px;color:var(--navy)}
+  .lightbox-body p{color:var(--muted);margin-bottom:14px}
+  .lightbox-toggle{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+  .lightbox-toggle button{padding:6px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#fff}
+  .lightbox-toggle button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .lightbox-divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:rgba(255,255,255,.95);box-shadow:0 0 0 1px rgba(15,23,42,.2);cursor:ew-resize;z-index:3;transform:translateX(-50%)}
+  .lightbox-divider::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:#fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .lightbox-divider::before{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;font-size:18px;color:var(--navy);font-weight:700}
+  .extra-thumb{display:inline-block;margin:8px 6px 0 0;border:1px solid var(--border);border-radius:8px;padding:2px;background:#fff}
+  .extra-thumb img{height:70px;display:block;border-radius:6px}
+
+  .footer{max-width:1440px;margin:0 auto;padding:28px;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--border)}
+  .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+  .empty svg{width:48px;height:48px;margin:0 auto 12px;opacity:.4}
+
+  @media (max-width:720px){
+    .hero h1{font-size:28px}
+    .search-box{width:100%;order:3}
+    .topbar-spacer{display:none}
+    .topbar-inner{flex-wrap:wrap}
+    .grid{grid-template-columns:1fr;padding:8px 16px 40px}
+    .hero{padding:32px 20px 16px}
+    .controls{padding:12px 20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/></svg>
+      </div>
+      築匠建築師事務所<small>(CTArch)</small>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="searchInput" type="text" placeholder="搜尋 Gem 名稱或功能…">
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>築匠 <span class="accent">AI</span> 助理</h1>
+  <p>所有 築匠系列 Gem 整合在同一頁；每張卡片都以實際產出圖做 <b>Before / After</b> 對比。點「啟動此 Gem」直接開啟對應工具。</p>
+  <div class="hero-meta">
+    <div class="stat"><span class="num" id="totalCount">27</span><span class="lbl">個 CTA Gem</span></div>
+    <div class="stat"><span class="num">27</span><span class="lbl">含實際對照圖</span></div>
+    <div class="stat"><span class="num">2</span><span class="lbl">種互動模式</span></div>
+  </div>
+</section>
+
+<section class="controls">
+  <div class="chips" id="categoryChips"></div>
+  <div class="mode-toggle" role="tablist" aria-label="互動模式">
+    <button class="mode-btn active" data-mode="slider">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v18M16 3v18"/></svg>
+      滑動對比
+    </button>
+    <button class="mode-btn" data-mode="hover">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+      Hover 切換（點圖放大）
+    </button>
+  </div>
+</section>
+
+<main class="grid slider-mode" id="grid"></main>
+
+<div class="lightbox-overlay" id="lightbox">
+  <div class="lightbox-content">
+    <button class="lightbox-close" aria-label="關閉">✕</button>
+    <div class="lightbox-visual" id="lbVisual"></div>
+    <div class="lightbox-body">
+      <h3 id="lbTitle"></h3>
+      <p id="lbDesc"></p>
+      <div class="lightbox-toggle">
+        <button class="active" data-view="slider">滑動對比</button>
+        <button data-view="before">僅看 Before</button>
+        <button data-view="after">僅看 After</button>
+      </div>
+      <div id="lbExtras"></div>
+      <a class="btn" id="lbLink" target="_blank">啟動此 Gem →</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（v2.1 版）</p>
+</footer>
+
+<script>
+const GEMS = [
+  {
+    "id": "1c5d5c5aac22",
+    "href": "https://gemini.google.com/gem/1c5d5c5aac22",
+    "name": "CTA-建築造型整合大師(分頁版)-無參考圖",
+    "desc": "從一張照片中擷取造型轉化成建築物",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築造型整合大師(分頁版)-無參考圖-01.png",
+    "imgAfter": "before01_after02/CTA-建築造型整合大師(分頁版)-無參考圖-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "c4153a461a44",
+    "href": "https://gemini.google.com/gem/c4153a461a44",
+    "name": "CTA-建築設計說明設計大師-沒有使用額外參考圖面的版本",
+    "desc": "由一張照片為參考，製作出符合期待的建築物樣態",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築設計說明設計大師-沒有使用額外參考圖面的版本-01.png",
+    "imgAfter": "before01_after02/CTA-建築設計說明設計大師-沒有使用額外參考圖面的版本-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "fd1fa853fc6c",
+    "href": "https://gemini.google.com/gem/fd1fa853fc6c",
+    "name": "CTA-建築造型轉換為工業設計物品大師-直接造型搬移",
+    "desc": "以一張建築圖，可以將其特色重新設計為一個工業設計產品",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-建築造型轉換為工業設計物品大師-直接造型搬移-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築造型轉換為工業設計物品大師-直接造型搬移-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "1rD6Qpzfa-KLJ8mtt7Ekf4UkJjcmDPgRt",
+    "href": "https://gemini.google.com/gem/1rD6Qpzfa-KLJ8mtt7Ekf4UkJjcmDPgRt?usp=sharing",
+    "name": "「CTA-室內設計大師」-由建築轉換版本",
+    "desc": "接收使用者提供的任何建築物造型，並將其轉化融入室內設計",
+    "category": "interior",
+    "imgBefore": "before01_after02/「CTA-室內設計大師」-由建築轉換版本-01.png",
+    "imgAfter": "before01_after02/「CTA-室內設計大師」-由建築轉換版本-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "93f5319d5bd8",
+    "href": "https://gemini.google.com/gem/93f5319d5bd8",
+    "name": "CTA-建築施工圖大師(GPT版本)",
+    "desc": "由一張圖，可以幫我產生完整一套的建築施工圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築施工圖大師(GPT版本)-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築施工圖大師(GPT版本)-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "e3a1a58c3860",
+    "href": "https://gemini.google.com/gem/e3a1a58c3860",
+    "name": "CTA-工業設計大師",
+    "desc": "給一張手繪圖或照片，製作工業設計產品的設計圖",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業設計大師-01.png",
+    "imgAfter": "before01_after02/CTA-工業設計大師-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "597eae2d195f",
+    "href": "https://gemini.google.com/gem/597eae2d195f",
+    "name": "CTA-建築剖透分析圖(單張圖片版本)",
+    "desc": "由一張建築物照片變成有說明的剖面透視圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築剖透分析圖(單張圖片版本)-01.png",
+    "imgAfter": "before01_after02/CTA-建築剖透分析圖(單張圖片版本)-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "710bab057a55",
+    "href": "https://gemini.google.com/gem/710bab057a55",
+    "name": "CTA-建築剖透分析圖(海報版本)",
+    "desc": "由一張建築照片提供有海報格式的各種分析圖片",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築剖透分析圖(海報版本)-01.png",
+    "imgAfter": "before01_after02/CTA-建築剖透分析圖(海報版本)-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "ac91d2e59d9c",
+    "href": "https://gemini.google.com/gem/ac91d2e59d9c",
+    "name": "CTA-碳足跡海報製作大師",
+    "desc": "由一張圖片製作這建築物的碳足跡海報分析圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-碳足跡海報製作大師-01.png",
+    "imgAfter": "before01_after02/CTA-碳足跡海報製作大師-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "080f0dbc74b4",
+    "href": "https://gemini.google.com/gem/080f0dbc74b4",
+    "name": "CTA-建築攝影師-各角度",
+    "desc": "從一張圖開始以攝影師的視角，拍出各種角度的照片",
+    "category": "photo",
+    "imgBefore": "before01_after02/CTA-建築攝影師-各角度-01.png",
+    "imgAfter": "before01_after02/CTA-建築攝影師-各角度-02.png",
+    "imgExtra": "before01_after02/CTA-建築攝影師-各角度-03.png"
+  },
+  {
+    "id": "6e85f2b4b7b1",
+    "href": "https://gemini.google.com/gem/6e85f2b4b7b1",
+    "name": "CTA-建築設計說明設計大師",
+    "desc": "由一張建築物照片產出一張具有專業設計排版的建築物設計說明海報",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築設計說明設計大師-01.png",
+    "imgAfter": "before01_after02/CTA-建築設計說明設計大師-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "0537fe014d21",
+    "href": "https://gemini.google.com/gem/0537fe014d21",
+    "name": "CTA-完整建築設計大師",
+    "desc": "由一張圖或是一句話，製作完整的建築設計圖說",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-完整建築設計大師-01.png",
+    "imgAfter": "before01_after02/CTA-完整建築設計大師-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "65ac2acb1bca",
+    "href": "https://gemini.google.com/gem/65ac2acb1bca",
+    "name": "CTA-建築完工照攝影師",
+    "desc": "將建築物完工拍攝的照片由專業攝影師修圖",
+    "category": "photo",
+    "imgBefore": "before01_after02/CTA-建築完工照攝影師-01.png",
+    "imgAfter": "before01_after02/CTA-建築完工照攝影師-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "e86a5a962445",
+    "href": "https://gemini.google.com/gem/e86a5a962445",
+    "name": "CTA-建築造型整合大師(分頁版)",
+    "desc": "從一張照片中擷取造型轉化成建築物",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築造型整合大師(分頁版)-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築造型整合大師(分頁版)-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "f0f50c89bd97",
+    "href": "https://gemini.google.com/gem/f0f50c89bd97",
+    "name": "CTA-建築物平立剖面圖製造機",
+    "desc": "從一張提供的建築物照片，繪製平立剖面圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築物平立剖面圖製造機-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築物平立剖面圖製造機-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "9e61e6436e3f",
+    "href": "https://gemini.google.com/gem/9e61e6436e3f",
+    "name": "CTA-建築施工圖大師(Gemini版本)",
+    "desc": "由一張圖，可以幫我產生完整一套的建築施工圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築施工圖大師(Gemini版本)-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築施工圖大師(Gemini版本)-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "6721ccf4684a",
+    "href": "https://gemini.google.com/gem/6721ccf4684a",
+    "name": "CTA-室內設計整合大師(單頁版)",
+    "desc": "由一張建築物外觀照片，做出符合設計特色的室內場景",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內設計整合大師(單頁版)-01.jpg",
+    "imgAfter": "before01_after02/CTA-室內設計整合大師(單頁版)-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "52e89e36b5c8",
+    "href": "https://gemini.google.com/gem/52e89e36b5c8",
+    "name": "CTA-建築平面轉建築外觀透視",
+    "desc": "提供建築物各樓層的平面圖，直接給你外觀透視",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築平面轉建築外觀透視-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築平面轉建築外觀透視-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "9b6596bdc4e4",
+    "href": "https://gemini.google.com/gem/9b6596bdc4e4",
+    "name": "CTA-建築造型轉換為工業設計物品大師-造型搬移後重新設計",
+    "desc": "由一張建築物圖片，重新解析後再設計成工業設計產品",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-建築造型轉換為工業設計物品大師-造型搬移後重新設計-01.png",
+    "imgAfter": "before01_after02/CTA-建築造型轉換為工業設計物品大師-造型搬移後重新設計-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "a56c910f7d11",
+    "href": "https://gemini.google.com/gem/a56c910f7d11",
+    "name": "CTA-巴黎藝術學院-繪圖風格",
+    "desc": "由一張照片為參考，繪製平立剖透視圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-巴黎藝術學院-繪圖風格-01.png",
+    "imgAfter": "before01_after02/CTA-巴黎藝術學院-繪圖風格-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "671cc9128818",
+    "href": "https://gemini.google.com/gem/671cc9128818",
+    "name": "CTA-建築立面整合建築師",
+    "desc": "將建築物原有外觀造型參考新的圖片重新設計",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築立面整合建築師-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築立面整合建築師-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "4dd13c530693",
+    "href": "https://gemini.google.com/gem/4dd13c530693",
+    "name": "CTA-建築模型製造機",
+    "desc": "一張圖片變成建築模型",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築模型製造機-01.png",
+    "imgAfter": "before01_after02/CTA-建築模型製造機-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "5c67fd106709",
+    "href": "https://gemini.google.com/gem/5c67fd106709",
+    "name": "CTA-工業設計大師-等角透視說明",
+    "desc": "一個等角透視說明的圖片(半透明狀)",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業設計大師-等角透視說明-01.jpg",
+    "imgAfter": "before01_after02/CTA-工業設計大師-等角透視說明-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "a562fcd4bd80",
+    "href": "https://gemini.google.com/gem/a562fcd4bd80",
+    "name": "CTA-室內設計大師",
+    "desc": "提供一張室內圖說，作為空間尺度基底，參考1~5張圖面做新設計",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內設計大師-01.jpg",
+    "imgAfter": "before01_after02/CTA-室內設計大師-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "a87a92bd740a",
+    "href": "https://gemini.google.com/gem/a87a92bd740a",
+    "name": "CTA-建築燈會",
+    "desc": "把建築物變成燈籠",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築燈會-01.jpg",
+    "imgAfter": "before01_after02/CTA-建築燈會-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "f55875fb5946",
+    "href": "https://gemini.google.com/gem/f55875fb5946",
+    "name": "CTA-建築造型整合大師(單頁版)",
+    "desc": "從一張照片中擷取造型轉化成建築物產生單頁的版本",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築造型整合大師(單頁版)-01.png",
+    "imgAfter": "before01_after02/CTA-建築造型整合大師(單頁版)-02.png",
+    "imgExtra": null
+  },
+  {
+    "id": "a5e4bbbb9e38",
+    "href": "https://gemini.google.com/gem/a5e4bbbb9e38",
+    "name": "CTA-建築美學大師",
+    "desc": "提供一張建築照片，產生美化過的圖片",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築美學大師-01.png",
+    "imgAfter": "before01_after02/CTA-建築美學大師-02.png",
+    "imgExtra": null
+  }
+];
+
+const CATEGORIES = [
+  {key:"all",label:"全部"},
+  {key:"arch",label:"建築設計"},
+  {key:"interior",label:"室內設計"},
+  {key:"id",label:"工業設計"},
+  {key:"doc",label:"圖說/分析"},
+  {key:"photo",label:"攝影後製"}
+];
+
+function esc(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function imgHtml(src, alt){
+  if (!src) return '<div class="missing">（尚無對照圖）</div>';
+  return '<img src="'+src+'" alt="'+esc(alt)+'" loading="lazy">';
+}
+
+function cardHtml(g){
+  const catLabel = {arch:'建築',interior:'室內',id:'工業',doc:'圖說',photo:'攝影'}[g.category] || '其他';
+  return `
+    <article class="card" data-cat="${g.category}">
+      <div class="visual"
+           data-href="${esc(g.href)}"
+           data-title="${esc(g.name)}"
+           data-descfull="${esc(g.desc)}"
+           data-before="${esc(g.imgBefore)}"
+           data-after="${esc(g.imgAfter)}"
+           data-extra="${esc(g.imgExtra)}">
+        <div class="layer-before">${imgHtml(g.imgBefore, g.name+' Before')}</div>
+        <div class="layer-after">${imgHtml(g.imgAfter, g.name+' After')}</div>
+        <div class="divider" aria-hidden="true"></div>
+        <span class="label label-before">Before</span>
+        <span class="label label-after">After</span>
+      </div>
+      <div class="content">
+        <span class="badge ${g.category}">${catLabel}</span>
+        <h3 class="title">${g.name}</h3>
+        <p class="desc">${g.desc}</p>
+        <a class="btn" href="${esc(g.href)}" target="_blank" rel="noopener">
+          啟動此 Gem
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>`;
+}
+
+const grid = document.getElementById('grid');
+const chipsEl = document.getElementById('categoryChips');
+
+CATEGORIES.forEach(c => {
+  const count = c.key === 'all' ? GEMS.length : GEMS.filter(g => g.category === c.key).length;
+  const btn = document.createElement('button');
+  btn.className = 'chip' + (c.key === 'all' ? ' active' : '');
+  btn.dataset.cat = c.key;
+  btn.innerHTML = `${c.label}<span class="count">${count}</span>`;
+  chipsEl.appendChild(btn);
+});
+
+function render(){
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const activeCat = document.querySelector('.chip.active')?.dataset.cat || 'all';
+  const filtered = GEMS.filter(g => {
+    if (activeCat !== 'all' && g.category !== activeCat) return false;
+    if (query && !(g.name.toLowerCase().includes(query) || g.desc.toLowerCase().includes(query))) return false;
+    return true;
+  });
+  grid.innerHTML = filtered.length
+    ? filtered.map(cardHtml).join('')
+    : '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>找不到相符的 Gem</p></div>';
+  attachInteractions();
+}
+
+function attachInteractions(){
+  const mode = document.querySelector('.mode-btn.active').dataset.mode;
+  if (mode === 'slider') {
+    document.querySelectorAll('.visual').forEach(v => {
+      const div = v.querySelector('.divider');
+      const after = v.querySelector('.layer-after');
+      const lb = v.querySelector('.label-before');
+      const la = v.querySelector('.label-after');
+      if (!div || !after) return;
+      let dragging = false;
+      // 依滑動位置決定要顯示哪個 label（過半才切換）
+      const updateLabels = pct => {
+        if (!lb || !la) return;
+        if (pct < 50)      { lb.style.display='none'; la.style.display=''; }
+        else if (pct > 50) { lb.style.display='';     la.style.display='none'; }
+        else               { lb.style.display='';     la.style.display=''; }
+      };
+      const onMove = e => {
+        if (!dragging) return;
+        const r = v.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+        const pct = Math.max(0, Math.min(100, (x / r.width) * 100));
+        div.style.left = pct + '%';
+        after.style.clipPath = `inset(0 0 0 ${pct}%)`;
+        updateLabels(pct);
+      };
+      div.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; });
+      v.addEventListener('mousedown', e => {
+        if (e.target.classList && e.target.classList.contains('divider')) return;
+        dragging = true; onMove(e);
+      });
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', () => dragging = false);
+      div.addEventListener('touchstart', () => { dragging = true; });
+      v.addEventListener('touchmove', onMove);
+      v.addEventListener('touchend', () => dragging = false);
+    });
+  }
+  if (mode === 'hover') {
+    // 點擊開啟 Lightbox 放大檢視
+    document.querySelectorAll('.visual').forEach(v => {
+      v.addEventListener('click', () => openLightbox(v));
+    });
+  }
+}
+
+const lightbox = document.getElementById('lightbox');
+const lbVisual = document.getElementById('lbVisual');
+const lbTitle = document.getElementById('lbTitle');
+const lbDesc = document.getElementById('lbDesc');
+const lbLink = document.getElementById('lbLink');
+const lbExtras = document.getElementById('lbExtras');
+
+function openLightbox(v){
+  const before = v.dataset.before, after = v.dataset.after, extra = v.dataset.extra;
+  lbTitle.textContent = v.dataset.title;
+  lbDesc.textContent = v.dataset.descfull;
+  lbLink.href = v.dataset.href;
+  lbVisual.innerHTML =
+    '<div class="layer-before">'+imgHtml(before, 'Before')+'</div>'+
+    '<div class="layer-after" id="lbAfter" style="clip-path:inset(0 0 0 50%)">'+imgHtml(after, 'After')+'</div>'+
+    '<span class="label label-before">Before</span>'+
+    '<span class="label label-after">After</span>'+
+    '<div class="lightbox-divider" id="lbDividerX"></div>';
+
+  if (extra && extra !== 'null' && extra !== '') {
+    lbExtras.innerHTML = '<div style="font-size:12px;color:#64748b;margin-top:6px">更多產出：</div>'+
+      '<a class="extra-thumb" href="'+extra+'" target="_blank"><img src="'+extra+'" alt="額外產出"></a>';
+  } else {
+    lbExtras.innerHTML = '';
+  }
+
+  const divX = document.getElementById('lbDividerX');
+  const lbAfter = document.getElementById('lbAfter');
+  const lbLblBefore = lbVisual.querySelector('.label-before');
+  const lbLblAfter  = lbVisual.querySelector('.label-after');
+  // Lightbox 彈窗內套用與卡片一致的 label 規則
+  const updateLbLabels = pct => {
+    if (!lbLblBefore || !lbLblAfter) return;
+    if (pct < 50)      { lbLblBefore.style.display='none'; lbLblAfter.style.display=''; }
+    else if (pct > 50) { lbLblBefore.style.display='';     lbLblAfter.style.display='none'; }
+    else               { lbLblBefore.style.display='';     lbLblAfter.style.display=''; }
+  };
+  let drag = false;
+  const mv = e => {
+    if (!drag) return;
+    const r = lbVisual.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    const pct = Math.max(0, Math.min(100, (x/r.width)*100));
+    divX.style.left = pct+'%';
+    lbAfter.style.clipPath = `inset(0 0 0 ${pct}%)`;
+    updateLbLabels(pct);
+  };
+  divX.addEventListener('mousedown', ()=>drag=true);
+  lbVisual.addEventListener('mousedown', e=>{
+    if(e.target===divX) return;
+    drag=true; mv(e);
+  });
+  document.addEventListener('mousemove', mv);
+  document.addEventListener('mouseup', ()=>drag=false);
+
+  document.querySelectorAll('.lightbox-toggle button').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('.lightbox-toggle button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      const view = b.dataset.view;
+      if (view === 'slider') {
+        lbAfter.style.clipPath = 'inset(0 0 0 50%)';
+        divX.style.left='50%';
+        divX.style.display='block';
+        updateLbLabels(50);
+      }
+      if (view === 'before') {
+        lbAfter.style.clipPath = 'inset(0 0 0 100%)';
+        divX.style.display='none';
+        updateLbLabels(100); // Before 獨大
+      }
+      if (view === 'after')  {
+        lbAfter.style.clipPath = 'inset(0 0 0 0%)';
+        divX.style.display='none';
+        updateLbLabels(0);   // After 獨大
+      }
+    };
+  });
+
+  lightbox.classList.add('show');
+}
+document.querySelector('.lightbox-close').addEventListener('click', ()=>lightbox.classList.remove('show'));
+lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('show'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('show'); });
+
+chipsEl.addEventListener('click', e => {
+  if (!e.target.closest('.chip')) return;
+  const chip = e.target.closest('.chip');
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  render();
+});
+
+document.getElementById('searchInput').addEventListener('input', () => render());
+
+document.querySelectorAll('.mode-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    grid.className = 'grid ' + b.dataset.mode + '-mode';
+    render();
+  });
+});
+
+render();
+document.getElementById('totalCount').textContent = GEMS.length;
+</script>
+
+</body>
+</html>
