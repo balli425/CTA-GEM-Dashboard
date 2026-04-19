@@ -198,7 +198,54 @@
 
 <footer class="footer">
   <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（v2.1 版）</p>
+  
+  <!-- 複雜觀看數字統計區塊 -->
+  <div style="margin-top: 16px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px;">
+    <span style="font-weight: 700; color: var(--navy);">📊 網站觀看人次：</span>
+    <div style="display: flex; gap: 12px; background: #fff; padding: 6px 14px; border: 1px solid var(--border); border-radius: 9px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);">
+      <div>今日 <strong id="cnt-today" style="color: var(--orange);">...</strong></div>
+      <div style="color: var(--border);">|</div>
+      <div>本月 <strong id="cnt-month" style="color: var(--orange);">...</strong></div>
+      <div style="color: var(--border);">|</div>
+      <div>年度 <strong id="cnt-year" style="color: var(--orange);">...</strong></div>
+      <div style="color: var(--border);">|</div>
+      <div>總計 <strong id="cnt-total" style="color: var(--orange);">...</strong></div>
+    </div>
+  </div>
 </footer>
+
+<!-- 觀看人數運算腳本 -->
+<script>
+(function() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = yyyy + "-" + String(d.getMonth() + 1).padStart(2, '0');
+  const dd = mm + "-" + String(d.getDate()).padStart(2, '0');
+  
+  // 專屬免費獨立資料庫 ID
+  const bucket = 'UpdkEy78HzmGeeQsNQHcU2';
+  const endpoint = `https://kvdb.io/${bucket}/`;
+  
+  const keys = ['total', `yr_${yyyy}`, `mo_${mm}`, `dy_${dd}`];
+  const els = ['cnt-total', 'cnt-year', 'cnt-month', 'cnt-today'];
+  
+  // 利用 session 防止同一個人重新整理網頁洗數據
+  const isNewHit = !sessionStorage.getItem('ctarch_hit_recorded');
+  if (isNewHit) sessionStorage.setItem('ctarch_hit_recorded', '1');
+
+  keys.forEach((key, idx) => {
+    const method = isNewHit ? 'PATCH' : 'GET';
+    const body = isNewHit ? '+1' : null;
+    
+    fetch(endpoint + key, { method, body })
+      .then(r => r.ok ? r.text() : '0')
+      .then(v => {
+         const val = parseInt(v) || 0; 
+         document.getElementById(els[idx]).innerText = val;
+      }).catch(e => console.error("計數器連線錯誤:", e));
+  });
+})();
+</script>
 
 <script>
 const GEMS = [
