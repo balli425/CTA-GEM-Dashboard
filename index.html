@@ -941,4 +941,14 @@ document.querySelectorAll('.mode-btn').forEach(function(b) {
   b.addEventListener('click', function() {
     document.querySelectorAll('.mode-btn').forEach(function(x){ x.classList.remove('active'); });
     b.classList.add('active');
-    grid.className = 'grid 
+    grid.className = 'grid ' + b.dataset.mode + '-mode';
+    render();
+  });
+});
+
+render();
+document.getElementById('totalCount').textContent = GEMS.length;
+</script>
+
+</body>
+</html>
