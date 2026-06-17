@@ -872,6 +872,11 @@ function openLightbox(v){
     +'<span class="label label-after">After</span>'
     +'<div class="lightbox-divider" id="lbDividerX"></div>';
 
+  // 強制載入 lightbox 內的 lazy 圖片
+  lbVisual.querySelectorAll('img.lazy[data-src]').forEach(function(img){
+    img.src = img.dataset.src;
+  });
+
   lbExtras.innerHTML = (extra && extra !== 'null' && extra !== '')
     ? '<div style="font-size:12px;color:#64748b;margin-top:6px">更多產出：</div>'
       +'<a class="extra-thumb" href="'+extra+'" target="_blank"><img src="'+extra+'" alt="額外產出"></a>'
@@ -936,14 +941,4 @@ document.querySelectorAll('.mode-btn').forEach(function(b) {
   b.addEventListener('click', function() {
     document.querySelectorAll('.mode-btn').forEach(function(x){ x.classList.remove('active'); });
     b.classList.add('active');
-    grid.className = 'grid ' + b.dataset.mode + '-mode';
-    render();
-  });
-});
-
-render();
-document.getElementById('totalCount').textContent = GEMS.length;
-</script>
-
-</body>
-</html>
+    grid.className = 'grid 
