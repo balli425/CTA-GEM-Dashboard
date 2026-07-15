@@ -95,6 +95,8 @@
   .badge.id{background:#ede9fe;color:#5b21b6}
   .badge.doc{background:#ccfbf1;color:#115e59}
   .badge.photo{background:#fef3c7;color:#92400e}
+  .badge.landscape{background:#dcfce7;color:#166534}
+  .badge.civil{background:#e2e8f0;color:#334155}
   .title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.4}
   .desc{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:14px;flex:1}
   .btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;background:var(--navy);color:#fff;border-radius:10px;font-size:13px;font-weight:600;transition:.2s}
@@ -199,7 +201,7 @@
 </div>
 
 <footer class="footer">
-  <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（V1）｜ 2026-06-16 更新（V2）</p>
+  <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（V1）｜ 2026-06-16 更新（V2）｜ 2026-07-15 更新（V3，新增 29 個 Gem，共 71 個）</p>
   <div style="margin-top:16px;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;">
     <span style="font-weight:700;color:var(--navy);">📊 網站觀看人次：</span>
     <div style="display:flex;gap:12px;background:#fff;padding:6px 14px;border:1px solid var(--border);border-radius:9px;box-shadow:0 1px 3px rgba(15,23,42,0.06);">
@@ -245,7 +247,7 @@
 </script>
 
 <script>
-/* ── Gem 資料（V2.2 共 42 個上線）────────────── */
+/* ── Gem 資料（V3.0 共 71 個上線：原 42 個 + 新增 29 個）────────────── */
 /* 圖片路徑說明：
    before01_after02/ → 原有 G-001~G-027 的圖片資料夾
    測試截圖/         → 新增 G-029 以後的測試截圖
@@ -713,6 +715,325 @@ var GEMS = [
     "imgBefore": "before01_after02/CTA-建築物局部透視構造說明大師-01.jpg",
     "imgAfter":  "before01_after02/CTA-建築物局部透視構造說明大師-02.jpg",
     "imgExtra":  null
+  },
+  {
+    "num": "052",
+    "id": "4b21e8f82ba8",
+    "href": "https://gemini.google.com/gem/4b21e8f82ba8",
+    "name": "052. 景觀設計手稿轉鳥瞰渲染大師",
+    "desc": "使用者上傳景觀設計平面圖（手繪草稿、CAD 配置圖或種植計畫圖），Gem 輸出一張約 45～60 度俯角的鳥瞰透視渲染圖，讓業主直觀理解植栽配置與空間感，取代費時費工的手工透視渲染。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/景觀設計手稿轉鳥瞰渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/景觀設計手稿轉鳥瞰渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "053",
+    "id": "c707992c9a69",
+    "href": "https://gemini.google.com/gem/c707992c9a69",
+    "name": "053. 建築外牆材質換裝模擬大師",
+    "desc": "使用者上傳一張建築外觀照片或渲染圖，Gem 輸出以 2×2 排列的四種外牆材質方案對比圖（清水模／木格柵／石材／金屬板），讓設計師在施工前快速預覽不同材料組合的視覺效果，大幅縮短設計提案溝通時間。",
+    "category": "arch",
+    "imgBefore": "before01_after02/建築外牆材質換裝模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/建築外牆材質換裝模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "054",
+    "id": "5a99aea56208",
+    "href": "https://gemini.google.com/gem/5a99aea56208",
+    "name": "054. 老舊建築修復想像圖大師",
+    "desc": "使用者上傳一張老舊、破損或荒廢建築的現況照片，Gem 輸出一張與原始視角完全相同的修復後想像圖——保留歷史特徵、清除破損污漬，用於文化資產保存提案、老屋活化溝通或都市再生計畫的視覺化說明。",
+    "category": "arch",
+    "imgBefore": "before01_after02/老舊建築修復想像圖大師-01.jpg",
+    "imgAfter":  "before01_after02/老舊建築修復想像圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "055",
+    "id": "a5ea647588e4",
+    "href": "https://gemini.google.com/gem/a5ea647588e4",
+    "name": "055. 室內夜景情境燈光渲染大師",
+    "desc": "使用者上傳一張白天拍攝的室內空間照片，Gem 輸出一張相同視角的夜景燈光情境渲染圖——以崁燈、壁燈、燈條等人工光源重新塑造空間氛圍，適用於燈光設計提案、住宅行銷或商業空間視覺化。",
+    "category": "interior",
+    "imgBefore": "before01_after02/室內夜景情境燈光渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/室內夜景情境燈光渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "056",
+    "id": "8fbec67a9b4f",
+    "href": "https://gemini.google.com/gem/8fbec67a9b4f",
+    "name": "056. 土木構造物爆炸剖視圖大師",
+    "desc": "使用者上傳橋梁、擋土牆、道路斷面、涵洞等土木構造物的照片或設計圖，Gem 輸出一張等角透視爆炸剖視技術插圖，標示各層構造名稱（橋面版、PC 大梁、橋墩、基樁、AC 鋪面等），適用於工程教學、施工說明與提案簡報。",
+    "category": "civil",
+    "imgBefore": "before01_after02/土木構造物爆炸剖視圖大師-01.jpg",
+    "imgAfter":  "before01_after02/土木構造物爆炸剖視圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "056-1",
+    "id": "a1ac291fa053",
+    "href": "https://gemini.google.com/gem/a1ac291fa053",
+    "name": "056-1. 土木構造物爆炸剖視圖大師-細致英文說明版本",
+    "desc": "使用者上傳橋梁、擋土牆、道路斷面、涵洞等土木構造物的照片或設計圖，Gem 輸出一張等角透視爆炸剖視技術插圖（英文標示細緻版），標示各層構造名稱，適用於國際工程教學、施工說明與提案簡報。",
+    "category": "civil",
+    "imgBefore": "before01_after02/土木構造物爆炸剖視圖大師-細致英文說明版本-01.jpg",
+    "imgAfter":  "before01_after02/土木構造物爆炸剖視圖大師-細致英文說明版本-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "057",
+    "id": "0aeed56a2a02",
+    "href": "https://gemini.google.com/gem/0aeed56a2a02",
+    "name": "057. CTA-建築草圖水彩渲染大師",
+    "desc": "使用者上傳一張建築鉛筆線稿或手繪草圖，Gem 輸出一幅帶有鬆散筆觸、暖色調渲染的水彩風格建築表現圖，適合簡報提案或競圖說明。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築草圖水彩渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築草圖水彩渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "058",
+    "id": "4e4b377161e1",
+    "href": "https://gemini.google.com/gem/4e4b377161e1",
+    "name": "058. CTA-景觀植栽鳥瞰彩圖大師",
+    "desc": "使用者上傳一張景觀基地平面草圖或空白配置圖，Gem 輸出一幅色彩豐富的景觀鳥瞰植栽平面圖，含樹冠符號、地被紋理、鋪面圖案與水景元素，適合景觀設計提案。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-景觀植栽鳥瞰彩圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-景觀植栽鳥瞰彩圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "059",
+    "id": "e9abbdbf5d49",
+    "href": "https://gemini.google.com/gem/e9abbdbf5d49",
+    "name": "059. CTA-工業設計草稿精致效果圖大師",
+    "desc": "使用者上傳一張產品鉛筆草稿或麥克筆概念圖，Gem 輸出一幅具有真實材質質感（金屬、塑膠、木材等）的精致產品效果圖，適合設計概念發表或客戶提案。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業設計草稿精致效果圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工業設計草稿精致效果圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "060",
+    "id": "4d6fca77f3c9",
+    "href": "https://gemini.google.com/gem/4d6fca77f3c9",
+    "name": "060. CTA-建築外觀四季情境模擬大師",
+    "desc": "使用者上傳一張建築外觀照片，並指定目標季節（春、夏、秋、冬），Gem 輸出同一棟建築在指定季節環境氛圍下的情境模擬圖，含植栽、天空、光線的季節性替換。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築外觀四季情境模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築外觀四季情境模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "061",
+    "id": "517ce91555ea",
+    "href": "https://gemini.google.com/gem/517ce91555ea",
+    "name": "061. CTA-廚衛磁磚拼貼設計模擬大師",
+    "desc": "使用者上傳一張浴室或廚房的牆面、地面現況照片，Gem 輸出同一空間套用不同磁磚圖案與色系後的設計模擬圖，協助業主在施工前直觀確認選材效果。",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-廚衛磁磚拼貼設計模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-廚衛磁磚拼貼設計模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "062",
+    "id": "1d3709377aac",
+    "href": "https://gemini.google.com/gem/1d3709377aac",
+    "name": "062. CTA-建築工地現況轉完工透視圖大師",
+    "desc": "使用者上傳建築工地施工中的現況照片，Gem 依照同一角度與光線，生成一張猜測模擬完工後的外觀透視渲染圖。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築工地現況轉完工透視圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築工地現況轉完工透視圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "063",
+    "id": "b506e48e31c0",
+    "href": "https://gemini.google.com/gem/b506e48e31c0",
+    "name": "063. CTA-植生立面綠牆設計模擬大師",
+    "desc": "使用者上傳建築外牆或室內牆面照片，Gem 在同一視角下模擬加裝垂直綠化植物牆後的視覺效果，展示不同植生搭配方案的落成樣貌，適合建築提案或景觀規劃簡報。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-植生立面綠牆設計模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-植生立面綠牆設計模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "064",
+    "id": "a5cd8f980655",
+    "href": "https://gemini.google.com/gem/a5cd8f980655",
+    "name": "064. 產品零件爆炸透視說明圖大師",
+    "desc": "使用者上傳產品外觀照片或草圖，Gem 生成一張以等角透視呈現的爆炸分件圖，清楚展示各零組件的相對位置與結構關係，適用於說明書、專利圖或設計提案簡報。",
+    "category": "id",
+    "imgBefore": "before01_after02/產品零件爆炸透視說明圖大師-01.jpg",
+    "imgAfter":  "before01_after02/產品零件爆炸透視說明圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "065",
+    "id": "b163e4f0fe77",
+    "href": "https://gemini.google.com/gem/b163e4f0fe77",
+    "name": "065. 城市天際線剪影藝術海報大師",
+    "desc": "使用者上傳一張都市全景或天際線照片，Gem 將其轉化為一張具有視覺衝擊力的剪影藝術海報，以雙色或漸層色彩表現城市輪廓之美，適合展覽、城市宣傳或品牌視覺設計使用。",
+    "category": "photo",
+    "imgBefore": "before01_after02/城市天際線剪影藝術海報大師-01.jpg",
+    "imgAfter":  "before01_after02/城市天際線剪影藝術海報大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "066",
+    "id": "72cab65938d3",
+    "href": "https://gemini.google.com/gem/72cab65938d3",
+    "name": "066. CTA-建築實體模型轉細線墨線稿大師",
+    "desc": "使用者上傳建築實體模型（紙板、保麗龍、木頭或 3D 列印）的照片，Gem 將其轉化為一張精細的手繪風格墨線稿，保留模型的空間層次與細節，適合作品集、展覽或出版使用。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築實體模型轉細線墨線稿大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築實體模型轉細線墨線稿大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "067",
+    "id": "06d36553baba",
+    "href": "https://gemini.google.com/gem/06d36553baba",
+    "name": "067. CTA-手繪平面圖轉等角透視陳設圖大師",
+    "desc": "輸入一張手繪或簡單的室內平面圖，Gem 自動轉換成帶有傢俱陳設的等角透視（Isometric）彩色效果圖，讓平面配置以立體空間感一目了然呈現。",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-手繪平面圖轉等角透視陳設圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-手繪平面圖轉等角透視陳設圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "068",
+    "id": "e98c188dd8cd",
+    "href": "https://gemini.google.com/gem/e98c188dd8cd",
+    "name": "068. CTA-建築外牆植生生態願景圖大師",
+    "desc": "輸入一張建築外觀照片或渲染圖，Gem 將其轉換成充滿綠意植生的生態建築願景圖，呈現垂直綠化、屋頂花園或仿生外牆覆蓋效果，適合競圖提案或永續建築報告使用。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築外牆植生生態願景圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築外牆植生生態願景圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "069",
+    "id": "7c3745c04767",
+    "href": "https://gemini.google.com/gem/7c3745c04767",
+    "name": "069. CTA-橋樑景觀整合透視說明圖大師",
+    "desc": "輸入一張橋樑結構草圖或設計圖，Gem 自動轉換成整合周邊景觀環境的精致彩色透視說明圖，清楚呈現結構形式與景觀融合效果，適合提案報告或環評說明書使用。",
+    "category": "civil",
+    "imgBefore": "before01_after02/CTA-橋樑景觀整合透視說明圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-橋樑景觀整合透視說明圖大師-02.jpg",
+    "imgExtra":  "before01_after02/CTA-橋樑景觀整合透視說明圖大師-03.jpg"
+  },
+  {
+    "num": "070",
+    "id": "472d68f70d78",
+    "href": "https://gemini.google.com/gem/472d68f70d78",
+    "name": "070. CTA-室內空間配色方案對照圖大師",
+    "desc": "輸入一張室內空間照片或白模渲染圖，Gem 自動生成三種不同配色方案的橫向對照圖，幫助業主快速比較各種不同風格色彩計畫。",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內空間配色方案對照圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-室內空間配色方案對照圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "071",
+    "id": "598c46eb52fe",
+    "href": "https://gemini.google.com/gem/598c46eb52fe",
+    "name": "071. CTA-工業產品材質換裝效果模擬大師",
+    "desc": "輸入一張產品設計圖或實品照片，Gem 自動生成同一產品套用四種不同材質（金屬拉絲、胡桃木、霧面砂質黑、透明壓克力）的 2×2 對照效果圖，加速材質選型決策。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業產品材質換裝效果模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工業產品材質換裝效果模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "072",
+    "id": "66d534a063b3",
+    "href": "https://gemini.google.com/gem/66d534a063b3",
+    "name": "072. CTA-攝影作品電影感色調風格化大師",
+    "desc": "使用者上傳任意照片，Gem 依指定的電影風格（如韋斯安德森粉彩風、義大利黑色電影、80年代賽博龐克等）調整色相、飽和度、對比與陰影色彩，輸出一張具強烈電影感的風格化成品圖。",
+    "category": "photo",
+    "imgBefore": "before01_after02/CTA-攝影作品電影感色調風格化大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-攝影作品電影感色調風格化大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "074",
+    "id": "407ac22d6734",
+    "href": "https://gemini.google.com/gem/407ac22d6734",
+    "name": "074. CTA-中式庭院造景鳥瞰意境渲染大師",
+    "desc": "使用者上傳一張庭院基地的俯拍照片或手繪平面圖，Gem 置入完整的中式庭院景觀設計元素（假山疊石、悠遊魚池、迴廊、植生等），輸出一張四十五度俯視視角、具水墨意境的彩色鳥瞰渲染圖。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-中式庭院造景鳥瞰意境渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-中式庭院造景鳥瞰意境渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "075",
+    "id": "127809974650",
+    "href": "https://gemini.google.com/gem/127809974650",
+    "name": "075. CTA-工廠設備廠房等角配置說明圖大師",
+    "desc": "使用者上傳一張廠房平面圖手稿或廠房空間照片，Gem 轉化為一張等角透視（Isometric）的廠房設備配置說明圖，各設備以顏色區塊標示、附名稱標籤，並呈現廠房動線規劃。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工廠設備廠房等角配置說明圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工廠設備廠房等角配置說明圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "076",
+    "id": "863ae578f9ff",
+    "href": "https://gemini.google.com/gem/863ae578f9ff",
+    "name": "076. CTA-陽台露台植生景觀美化設計圖大師",
+    "desc": "使用者上傳一張開闊或現有陽台、露台的照片，Gem 在保留原始空間結構的前提下，設計並渲染一套完整的植生景觀美化方案，輸出與原圖相同視角的美化後成品圖。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-陽台露台植生景觀美化設計圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-陽台露台植生景觀美化設計圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "077",
+    "id": "86cdb88a7c47",
+    "href": "https://gemini.google.com/gem/86cdb88a7c47",
+    "name": "077. CTA-建築外觀夜間燈光情境渲染大師",
+    "desc": "使用者上傳一張日間建築外觀照片，Gem 輸出同一棟建築在夜間的燈光情境渲染圖，含外牆投光、窗內暖光、環境氛圍光與地面反射效果。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築外觀夜間燈光情境渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築外觀夜間燈光情境渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "078",
+    "id": "97e01e9a1892",
+    "href": "https://gemini.google.com/gem/97e01e9a1892",
+    "name": "078. CTA-廢棄廠房改造文創空間效果圖大師",
+    "desc": "使用者上傳廢棄廠房或老舊工業空間照片，Gem 輸出改造為藝廊、咖啡廳或共創工作室後的完整效果透視圖，保留工業感語彙並融入新機能。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-廢棄廠房改造文創空間效果圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-廢棄廠房改造文創空間效果圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "079",
+    "id": "9d282f66920f",
+    "href": "https://gemini.google.com/gem/9d282f66920f",
+    "name": "079. CTA-景觀水景設計效果模擬大師",
+    "desc": "使用者上傳庭院、廣場或基地照片，Gem 輸出加入水池、湧泉、溪流或瀑布等水景設計後的景觀效果模擬圖。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-景觀水景設計效果模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-景觀水景設計效果模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "080",
+    "id": "9744ae3d1bc0",
+    "href": "https://gemini.google.com/gem/9744ae3d1bc0",
+    "name": "080. CTA-產品手繪草圖轉品牌展示效果圖大師",
+    "desc": "使用者上傳產品手繪草圖或簡單線稿，Gem 輸出呈現在品牌展示情境中的精美效果圖，含材質、光影與背景佈景。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-產品手繪草圖轉品牌展示效果圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-產品手繪草圖轉品牌展示效果圖大師-02.jpg",
+    "imgExtra":  null
   }
 ];
 
@@ -722,7 +1043,9 @@ var CATEGORIES = [
   {key:"interior",label:"室內設計"},
   {key:"id",      label:"工業設計"},
   {key:"doc",     label:"圖說/分析"},
-  {key:"photo",   label:"攝影後製"}
+  {key:"photo",   label:"攝影後製"},
+  {key:"landscape",label:"景觀設計"},
+  {key:"civil",   label:"土木工程"}
 ];
 
 function esc(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
@@ -750,7 +1073,7 @@ function initLazyLoad(){
 }
 
 function cardHtml(g){
-  var catLabel = {arch:'建築',interior:'室內',id:'工業',doc:'圖說',photo:'攝影'}[g.category] || '其他';
+  var catLabel = {arch:'建築',interior:'室內',id:'工業',doc:'圖說',photo:'攝影',landscape:'景觀',civil:'土木'}[g.category] || '其他';
   var numBadge = g.num != null ? '<span class="num-badge">'+g.num+'</span>' : '';
   return '<article class="card" data-cat="'+g.category+'">'
     +'<div class="visual"'
