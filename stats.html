@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>築匠 GEM 使用統計｜築匠建築師事務所(CTArch)</title>
+<style>
+  :root {
+    --navy:#0f172a; --navy2:#1e293b; --orange:#ea7317; --orange2:#f59e0b;
+    --blue:#2563eb; --purple:#7c3aed; --green:#059669; --red:#dc2626;
+    --bg:#f8fafc; --card:#ffffff; --border:#e2e8f0;
+    --text:#0f172a; --muted:#64748b;
+    --radius:14px;
+    --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1280px;margin:0 auto;padding:32px 24px 60px}
+  h1{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:4px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+  .stat-card .lbl{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .stat-card .val{font-size:24px;font-weight:800;color:var(--navy)}
+  .stat-card .val.up{color:var(--green)}
+  .stat-card .val.down{color:var(--red)}
+  .toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{padding:7px 13px;border:1px solid var(--border);border-radius:999px;background:#fff;font-size:12.5px;color:var(--muted);cursor:pointer;font-weight:500}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+  label.check{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;margin-left:auto}
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  thead th{text-align:left;font-size:12px;color:var(--muted);background:#f1f5f9;padding:10px 12px;font-weight:700;white-space:nowrap;cursor:pointer;user-select:none}
+  thead th:hover{color:var(--navy)}
+  tbody td{padding:10px 12px;border-top:1px solid var(--border);font-size:13.5px;vertical-align:middle}
+  tbody tr:hover{background:#f8fafc}
+  tbody tr.flag{background:#fff7ed}
+  tbody tr.flag:hover{background:#fef3e2}
+  .rank{color:var(--muted);font-variant-numeric:tabular-nums;width:30px}
+  .gname{font-weight:600;color:var(--navy);max-width:340px}
+  .gname small{display:block;font-weight:400;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .badge{display:inline-flex;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+  .badge.arch{background:#dbeafe;color:#1e40af}
+  .badge.interior{background:#fce7f3;color:#9d174d}
+  .badge.id{background:#ede9fe;color:#5b21b6}
+  .badge.doc{background:#ccfbf1;color:#115e59}
+  .badge.photo{background:#fef3c7;color:#92400e}
+  .badge.landscape{background:#dcfce7;color:#166534}
+  .badge.civil{background:#e2e8f0;color:#334155}
+  .num{font-variant-numeric:tabular-nums;text-align:right}
+  .trend{display:flex;align-items:center;gap:4px;font-weight:700;font-variant-numeric:tabular-nums}
+  .trend.up{color:var(--green)}
+  .trend.down{color:var(--red)}
+  .trend.flat{color:var(--muted)}
+  .spark{display:flex;align-items:flex-end;gap:2px;height:24px}
+  .spark div{width:6px;background:var(--orange);border-radius:1px;min-height:2px}
+  .spark div.zero{background:var(--border)}
+  .tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b}
+  .note{margin-top:20px;font-size:12.5px;color:var(--muted);line-height:1.8}
+  .loading{padding:60px;text-align:center;color:var(--muted)}
+  footer{margin-top:36px;text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>築匠 GEM 使用統計</h1>
+  <p class="sub">依「啟動此 Gem」實際點擊次數統計，資料來源與首頁觀看人次計數器同一組 kvdb.io。此頁未公開連結於首頁，僅供內部查看。</p>
+
+  <div class="cards" id="summaryCards">
+    <div class="loading">資料讀取中…</div>
+  </div>
+
+  <div class="toolbar">
+    <div id="catChips"></div>
+    <label class="check"><input type="checkbox" id="onlyFlagged"> 只顯示近4週無點擊</label>
+  </div>
+
+  <div id="tableWrap"><div class="loading">讀取 kvdb.io 統計資料中…</div></div>
+
+  <p class="note">
+    「本週／上週」以 ISO 週（週一為起始）計算。「近4週無點擊」代表最近 4 個完整週內「啟動此 Gem」皆為 0 次，可作為盤點/汰換的參考，但新上架（例如 2026-07-15 V3 新增的 29 個）尚未累積足夠週數，建議先觀察、暫緩下架判斷。點擊次數為前端計數，同一人多次點擊會重複累加，僅供相對趨勢參考。
+  </p>
+
+  <footer>© 築匠建築師事務所(CTArch)　統計頁面</footer>
+</div>
+
+<script>
+var BUCKET   = 'UpdkEy78HzmGeeQsNQHcU2';
+var ENDPOINT = 'https://kvdb.io/' + BUCKET + '/';
+var CAT_LABEL = {arch:'建築',interior:'室內',id:'工業',doc:'圖說',photo:'攝影',landscape:'景觀',civil:'土木'};
+
+function isoWeekKey(d) {
+  var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  var dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  var yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  var weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  return date.getUTCFullYear() + '-W' + String(weekNo).padStart(2, '0');
+}
+function weeksAgoKey(n) {
+  var d = new Date();
+  d.setDate(d.getDate() - 7 * n);
+  return isoWeekKey(d);
+}
+
+var thisWeek = weeksAgoKey(0);
+var lastWeek = weeksAgoKey(1);
+var last4 = [weeksAgoKey(0), weeksAgoKey(1), weeksAgoKey(2), weeksAgoKey(3)];
+var last6 = [weeksAgoKey(5), weeksAgoKey(4), weeksAgoKey(3), weeksAgoKey(2), weeksAgoKey(1), weeksAgoKey(0)];
+
+Promise.all([
+  fetch('./gems_meta.json').then(function(r){ return r.json(); }),
+  fetch(ENDPOINT + '?prefix=gem_&values=true&format=json&limit=10000').then(function(r){ return r.json(); })
+]).then(function(results) {
+  var meta = results[0];
+  var kv   = results[1]; // [[key, value], ...]
+
+  var stats = {};
+  meta.forEach(function(g) {
+    stats[g.id] = { meta: g, total: 0, viewTotal: 0, weeks: {}, viewWeeks: {} };
+  });
+
+  kv.forEach(function(pair) {
+    var key = pair[0], val = pair[1];
+    var m;
+    if ((m = key.match(/^gem_(.+)_view_wk_(\d{4}-W\d{2})$/))) {
+      if (stats[m[1]]) stats[m[1]].viewWeeks[m[2]] = val;
+    } else if ((m = key.match(/^gem_(.+)_wk_(\d{4}-W\d{2})$/))) {
+      if (stats[m[1]]) stats[m[1]].weeks[m[2]] = val;
+    } else if ((m = key.match(/^gem_(.+)_view_total$/))) {
+      if (stats[m[1]]) stats[m[1]].viewTotal = val;
+    } else if ((m = key.match(/^gem_(.+)_total$/))) {
+      if (stats[m[1]]) stats[m[1]].total = val;
+    }
+  });
+
+  var rows = Object.keys(stats).map(function(id) {
+    var s = stats[id];
+    var tw = s.weeks[thisWeek] || 0;
+    var lw = s.weeks[lastWeek] || 0;
+    var sum4 = last4.reduce(function(a,wk){ return a + (s.weeks[wk]||0); }, 0);
+    var flagged = sum4 === 0;
+    return {
+      id: id, meta: s.meta, total: s.total, viewTotal: s.viewTotal,
+      thisWeek: tw, lastWeek: lw, sum4: sum4, flagged: flagged,
+      spark: last6.map(function(wk){ return s.weeks[wk] || 0; })
+    };
+  });
+
+  // summary cards
+  var totalClicksAll = rows.reduce(function(a,r){ return a+r.total; }, 0);
+  var thisWeekAll = rows.reduce(function(a,r){ return a+r.thisWeek; }, 0);
+  var lastWeekAll = rows.reduce(function(a,r){ return a+r.lastWeek; }, 0);
+  var wowPct = lastWeekAll ? Math.round((thisWeekAll - lastWeekAll) / lastWeekAll * 100) : (thisWeekAll>0?100:0);
+  var flaggedCount = rows.filter(function(r){ return r.flagged; }).length;
+
+  document.getElementById('summaryCards').innerHTML =
+    '<div class="stat-card"><div class="lbl">本週('+thisWeek+')總點擊</div><div class="val">'+thisWeekAll+'</div></div>'
+    +'<div class="stat-card"><div class="lbl">上週('+lastWeek+')總點擊</div><div class="val">'+lastWeekAll+'</div></div>'
+    +'<div class="stat-card"><div class="lbl">週對週變化</div><div class="val '+(wowPct>0?'up':wowPct<0?'down':'')+'">'+(wowPct>0?'+':'')+wowPct+'%</div></div>'
+    +'<div class="stat-card"><div class="lbl">累計總點擊</div><div class="val">'+totalClicksAll+'</div></div>'
+    +'<div class="stat-card"><div class="lbl">近4週無點擊</div><div class="val '+(flaggedCount>0?'down':'')+'">'+flaggedCount+' 個</div></div>';
+
+  // category chips
+  var cats = ['all'].concat(Object.keys(CAT_LABEL));
+  var chipsEl = document.getElementById('catChips');
+  chipsEl.innerHTML = cats.map(function(c) {
+    return '<button class="chip'+(c==='all'?' active':'')+'" data-cat="'+c+'">'+(c==='all'?'全部':CAT_LABEL[c])+'</button>';
+  }).join('');
+
+  var activeCat = 'all';
+  var onlyFlagged = false;
+
+  function render() {
+    var filtered = rows.filter(function(r) {
+      if (activeCat !== 'all' && r.meta.category !== activeCat) return false;
+      if (onlyFlagged && !r.flagged) return false;
+      return true;
+    }).sort(function(a,b){ return b.total - a.total; });
+
+    var maxSpark = 1;
+    filtered.forEach(function(r){ r.spark.forEach(function(v){ if (v>maxSpark) maxSpark=v; }); });
+
+    var html = '<table><thead><tr>'
+      +'<th>#</th><th>Gem</th><th>分類</th>'
+      +'<th style="text-align:right">本週</th><th style="text-align:right">上週</th><th>趨勢</th>'
+      +'<th>近6週走勢</th><th style="text-align:right">累計點擊</th><th style="text-align:right">累計瀏覽</th><th>標記</th>'
+      +'</tr></thead><tbody>';
+
+    filtered.forEach(function(r, i) {
+      var diff = r.thisWeek - r.lastWeek;
+      var trendClass = diff>0?'up':diff<0?'down':'flat';
+      var trendArrow = diff>0?'▲':diff<0?'▼':'—';
+      var sparkHtml = r.spark.map(function(v) {
+        var h = Math.max(2, Math.round(v / maxSpark * 22));
+        return '<div class="'+(v===0?'zero':'')+'" style="height:'+h+'px" title="'+v+'"></div>';
+      }).join('');
+      html += '<tr class="'+(r.flagged?'flag':'')+'">'
+        +'<td class="rank">'+(i+1)+'</td>'
+        +'<td class="gname">'+r.meta.name+'</td>'
+        +'<td><span class="badge '+r.meta.category+'">'+(CAT_LABEL[r.meta.category]||'其他')+'</span></td>'
+        +'<td class="num">'+r.thisWeek+'</td>'
+        +'<td class="num">'+r.lastWeek+'</td>'
+        +'<td><span class="trend '+trendClass+'">'+trendArrow+' '+(diff>0?'+':'')+diff+'</span></td>'
+        +'<td><div class="spark">'+sparkHtml+'</div></td>'
+        +'<td class="num">'+r.total+'</td>'
+        +'<td class="num">'+r.viewTotal+'</td>'
+        +'<td>'+(r.flagged?'<span class="tag">近4週無點擊</span>':'')+'</td>'
+        +'</tr>';
+    });
+    html += '</tbody></table>';
+    if (!filtered.length) html = '<div class="loading">沒有符合條件的 Gem</div>';
+    document.getElementById('tableWrap').innerHTML = html;
+  }
+
+  chipsEl.addEventListener('click', function(e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    activeCat = chip.dataset.cat;
+    render();
+  });
+  document.getElementById('onlyFlagged').addEventListener('change', function(e) {
+    onlyFlagged = e.target.checked;
+    render();
+  });
+
+  render();
+}).catch(function(err) {
+  document.getElementById('tableWrap').innerHTML = '<div class="loading">讀取失敗：'+err+'</div>';
+  console.error(err);
+});
+</script>
+</body>
+</html>
