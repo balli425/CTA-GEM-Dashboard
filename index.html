@@ -85,6 +85,14 @@
   .label-before{left:10px;background:rgba(15,23,42,.7)}
   .label-after{right:10px;background:rgba(234,115,23,.85)}
 
+  .fav-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#f1f5f9;flex-shrink:0;transition:.15s}
+  .fav-btn:hover{background:#e2e8f0;transform:scale(1.1)}
+  .fav-btn svg{width:14px;height:14px;fill:none;stroke:#64748b;stroke-width:2;transition:.15s}
+  .fav-btn.active{background:#fff7ed}
+  .fav-btn.active svg{fill:var(--orange);stroke:var(--orange)}
+  .chip[data-cat="fav"]{border-color:#fdba74}
+  .chip[data-cat="fav"].active{background:var(--orange);border-color:var(--orange)}
+
   .content{padding:18px 18px 16px;flex:1;display:flex;flex-direction:column}
   .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;width:fit-content}
   .num-badge{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 6px;background:var(--navy);color:#fff;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.3px;flex-shrink:0}
@@ -201,7 +209,7 @@
 </div>
 
 <footer class="footer">
-  <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（V1）｜ 2026-06-16 更新（V2）｜ 2026-07-15 更新（V3，新增 29 個 Gem，共 71 個）</p>
+  <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（V1）｜ 2026-06-16 更新（V2）｜ 2026-07-15 更新（V3，新增 29 個 Gem，共 71 個）｜ 2026-07-24 更新（V3.1，新增「我的最愛」收藏功能）</p>
   <div style="margin-top:16px;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;">
     <span style="font-weight:700;color:var(--navy);">📊 網站觀看人次：</span>
     <div style="display:flex;gap:12px;background:#fff;padding:6px 14px;border:1px solid var(--border);border-radius:9px;box-shadow:0 1px 3px rgba(15,23,42,0.06);">
@@ -1078,6 +1086,7 @@ var GEMS = [
 
 var CATEGORIES = [
   {key:"all",     label:"全部"},
+  {key:"fav",     label:"❤ 我的最愛"},
   {key:"arch",    label:"建築設計"},
   {key:"interior",label:"室內設計"},
   {key:"id",      label:"工業設計"},
@@ -1086,6 +1095,24 @@ var CATEGORIES = [
   {key:"landscape",label:"景觀設計"},
   {key:"civil",   label:"土木工程"}
 ];
+
+/* ── 我的最愛（存在使用者自己瀏覽器的 localStorage，各人各自獨立）───── */
+var FAV_KEY = 'ctarch_favorites';
+function getFavorites(){
+  try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }
+  catch(e){ return new Set(); }
+}
+function isFavorite(id){ return getFavorites().has(id); }
+function toggleFavorite(id){
+  var favs = getFavorites();
+  if (favs.has(id)) favs.delete(id); else favs.add(id);
+  localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(favs)));
+  return favs.has(id);
+}
+function updateFavChipCount(){
+  var chip = chipsEl.querySelector('.chip[data-cat="fav"] .count');
+  if (chip) chip.textContent = getFavorites().size;
+}
 
 function esc(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 function imgHtml(src, alt){
@@ -1133,6 +1160,9 @@ function cardHtml(g){
     +'<div class="card-header-row">'
     +numBadge
     +'<span class="badge '+g.category+'">'+catLabel+'</span>'
+    +'<button type="button" class="fav-btn'+(isFavorite(g.id)?' active':'')+'" data-fav-id="'+esc(g.id)+'" aria-label="加入我的最愛" title="加入我的最愛">'
+    +'<svg viewBox="0 0 24 24"><path d="M12 21C12 21 4 14.5 4 9.5C4 6.6 6.3 4.3 9.1 4.3C10.6 4.3 11.6 5 12 5.9C12.4 5 13.4 4.3 14.9 4.3C17.7 4.3 20 6.6 20 9.5C20 14.5 12 21 12 21Z"/></svg>'
+    +'</button>'
     +'</div>'
     +'<h3 class="title">'+g.name+'</h3>'
     +'<p class="desc">'+g.desc+'</p>'
@@ -1148,7 +1178,9 @@ var grid    = document.getElementById('grid');
 var chipsEl = document.getElementById('categoryChips');
 
 CATEGORIES.forEach(function(c) {
-  var count = c.key === 'all' ? GEMS.length : GEMS.filter(function(g){ return g.category === c.key; }).length;
+  var count = c.key === 'all' ? GEMS.length
+    : c.key === 'fav' ? getFavorites().size
+    : GEMS.filter(function(g){ return g.category === c.key; }).length;
   var btn = document.createElement('button');
   btn.className = 'chip' + (c.key === 'all' ? ' active' : '');
   btn.dataset.cat = c.key;
@@ -1160,13 +1192,15 @@ function render(){
   var query     = document.getElementById('searchInput').value.trim().toLowerCase();
   var activeCat = (document.querySelector('.chip.active') || {}).dataset.cat || 'all';
   var filtered  = GEMS.filter(function(g) {
-    if (activeCat !== 'all' && g.category !== activeCat) return false;
+    if (activeCat === 'fav') { if (!isFavorite(g.id)) return false; }
+    else if (activeCat !== 'all' && g.category !== activeCat) return false;
     if (query && !(g.name.toLowerCase().indexOf(query) >= 0 || g.desc.toLowerCase().indexOf(query) >= 0)) return false;
     return true;
   });
+  var emptyMsg = activeCat === 'fav' ? '尚未收藏任何 Gem，點卡片的愛心加入我的最愛' : '找不到相符的 Gem';
   grid.innerHTML = filtered.length
     ? filtered.map(function(g){ return cardHtml(g); }).join('')
-    : '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>找不到相符的 Gem</p></div>';
+    : '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>'+emptyMsg+'</p></div>';
   attachInteractions();
 }
 
@@ -1291,6 +1325,22 @@ function openLightbox(v){
 document.querySelector('.lightbox-close').addEventListener('click', function(){ lightbox.classList.remove('show'); });
 lightbox.addEventListener('click', function(e){ if (e.target === lightbox) lightbox.classList.remove('show'); });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape') lightbox.classList.remove('show'); });
+
+/* ── 我的最愛按鈕：用捕獲階段攔截，避免觸發卡片的滑動對比／開燈箱互動 ── */
+document.addEventListener('mousedown', function(e){
+  if (e.target.closest('.fav-btn')) e.stopPropagation();
+}, true);
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.fav-btn');
+  if (!btn) return;
+  e.stopPropagation();
+  e.preventDefault();
+  var nowActive = toggleFavorite(btn.dataset.favId);
+  btn.classList.toggle('active', nowActive);
+  updateFavChipCount();
+  var activeCat = (document.querySelector('.chip.active') || {}).dataset.cat;
+  if (activeCat === 'fav' && !nowActive) render();
+});
 
 chipsEl.addEventListener('click', function(e) {
   var chip = e.target.closest('.chip');
