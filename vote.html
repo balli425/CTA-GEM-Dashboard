@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>築匠 AI 助理 功能票選</title>
+<style>
+  :root {
+    --navy:#0f172a; --navy2:#1e293b; --orange:#ea7317; --orange2:#f59e0b;
+    --blue:#2563eb; --purple:#7c3aed; --green:#059669;
+    --bg:#f8fafc; --card:#ffffff; --border:#e2e8f0;
+    --text:#0f172a; --muted:#64748b;
+    --radius:14px;
+    --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.12);
+    --shadow-hover:0 4px 12px rgba(15,23,42,.08),0 20px 40px -16px rgba(15,23,42,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1440px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:.5px}
+  .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--navy),var(--orange));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px}
+  .logo-mark svg{width:18px;height:18px}
+  .logo small{color:var(--muted);font-weight:400;font-size:13px;margin-left:6px}
+  .topbar-spacer{flex:1}
+  .search-box{position:relative;width:320px}
+  .search-box input{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:14px;transition:.2s}
+  .search-box input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(234,115,23,.1)}
+  .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+
+  .hero{max-width:1440px;margin:0 auto;padding:48px 28px 24px}
+  .hero h1{font-size:36px;font-weight:800;letter-spacing:-.5px;color:var(--navy);margin-bottom:8px}
+  .hero h1 .accent{background:linear-gradient(120deg,var(--orange),var(--orange2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:16px;color:var(--muted);max-width:none}
+  .hero .notice{font-size:17px;font-weight:600;color:#dc2626;max-width:none;margin-top:10px}
+  .hero .notice a{color:#dc2626;text-decoration:underline;text-underline-offset:3px}
+  .hero-meta{margin-top:18px;display:flex;gap:24px;flex-wrap:wrap}
+  .stat{display:flex;align-items:baseline;gap:6px}
+  .stat .num{font-size:26px;font-weight:800;color:var(--navy)}
+  .stat .lbl{font-size:13px;color:var(--muted)}
+
+  .controls{max-width:1440px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+  .chip{padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:#fff;font-size:13px;color:var(--muted);transition:.2s;font-weight:500}
+  .chip:hover{border-color:var(--navy);color:var(--navy)}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+  .chip .count{opacity:.7;margin-left:4px;font-size:11px}
+
+  .mode-toggle{display:flex;border:1px solid var(--border);border-radius:10px;background:#fff;overflow:hidden}
+  .mode-btn{padding:8px 14px;font-size:13px;color:var(--muted);border-right:1px solid var(--border);display:flex;align-items:center;gap:6px;transition:.2s}
+  .mode-btn:last-child{border-right:0}
+  .mode-btn:hover{color:var(--navy)}
+  .mode-btn.active{background:var(--navy);color:#fff}
+  .mode-btn svg{width:14px;height:14px}
+
+  .grid{max-width:1440px;margin:0 auto;padding:8px 28px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+  .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;transition:.25s;box-shadow:var(--shadow)}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:transparent}
+  .visual{position:relative;aspect-ratio:16/10;background:#f1f5f9;overflow:hidden;cursor:pointer;user-select:none}
+
+  .layer-before,.layer-after{position:absolute;inset:0;width:100%;height:100%}
+  .visual img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .missing{display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:12px;background:#f1f5f9}
+
+  /* Slider */
+  .slider-mode .layer-after{clip-path:inset(0 0 0 50%);transition:none}
+  .slider-mode .divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:rgba(255,255,255,.95);box-shadow:0 0 0 1px rgba(15,23,42,.2);cursor:ew-resize;z-index:3;transform:translateX(-50%)}
+  .slider-mode .divider::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;background:#fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:ew-resize}
+  .slider-mode .divider::before{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;font-size:14px;color:var(--navy);font-weight:700}
+
+  /* Hover */
+  .hover-mode .visual{cursor:zoom-in}
+  .hover-mode .layer-after{opacity:0;transition:opacity .4s ease}
+  .hover-mode .visual:hover .layer-after{opacity:1}
+  .hover-mode .divider{display:none}
+  .hover-mode .label{transition:opacity .25s ease}
+  .hover-mode .visual .label-after{opacity:0}
+  .hover-mode .visual:hover .label-before{opacity:0}
+  .hover-mode .visual:hover .label-after{opacity:1}
+
+  .label{position:absolute;top:10px;padding:3px 10px;font-size:11px;font-weight:600;color:#fff;border-radius:999px;backdrop-filter:blur(8px);z-index:2;letter-spacing:.5px;width:auto;height:auto;inset:auto}
+  .label-before{left:10px;background:rgba(15,23,42,.7)}
+  .label-after{right:10px;background:rgba(234,115,23,.85)}
+
+  .fav-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#f1f5f9;flex-shrink:0;transition:.15s}
+  .fav-btn:hover{background:#e2e8f0;transform:scale(1.1)}
+  .fav-btn svg{width:14px;height:14px;fill:none;stroke:#64748b;stroke-width:2;transition:.15s}
+  .fav-btn.active{background:#fff7ed}
+  .fav-btn.active svg{fill:var(--orange);stroke:var(--orange)}
+  .chip[data-cat="fav"]{border-color:#fdba74}
+  .chip[data-cat="fav"].active{background:var(--orange);border-color:var(--orange)}
+
+  .content{padding:18px 18px 16px;flex:1;display:flex;flex-direction:column}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;width:fit-content}
+  .num-badge{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 6px;background:var(--navy);color:#fff;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.3px;flex-shrink:0}
+  .card-header-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+  .card-header-row .badge{margin-bottom:0}
+  .badge.arch{background:#dbeafe;color:#1e40af}
+  .badge.interior{background:#fce7f3;color:#9d174d}
+  .badge.id{background:#ede9fe;color:#5b21b6}
+  .badge.doc{background:#ccfbf1;color:#115e59}
+  .badge.photo{background:#fef3c7;color:#92400e}
+  .badge.landscape{background:#dcfce7;color:#166534}
+  .badge.civil{background:#e2e8f0;color:#334155}
+  .title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.4}
+  .desc{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:14px;flex:1}
+  .btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;background:var(--navy);color:#fff;border-radius:10px;font-size:13px;font-weight:600;transition:.2s}
+  .btn:hover{background:var(--orange);transform:translateY(-1px)}
+  .btn svg{width:14px;height:14px}
+
+  /* Lightbox */
+  .lightbox-overlay{position:fixed;inset:0;background:rgba(15,23,42,.92);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:40px}
+  .lightbox-overlay.show{display:flex}
+  .lightbox-content{max-width:1200px;width:100%;background:#fff;border-radius:16px;overflow:hidden;position:relative;max-height:92vh;display:flex;flex-direction:column}
+  .lightbox-close{position:absolute;top:16px;right:16px;width:36px;height:36px;background:rgba(15,23,42,.5);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:5;font-size:20px}
+  .lightbox-close:hover{background:rgba(15,23,42,.8)}
+  .lightbox-visual{position:relative;aspect-ratio:16/9;background:#0f172a;overflow:hidden;user-select:none}
+  .lightbox-visual img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
+  .lightbox-body{padding:20px 28px 24px;overflow-y:auto}
+  .lightbox-body h3{font-size:22px;margin-bottom:6px;color:var(--navy)}
+  .lightbox-body p{color:var(--muted);margin-bottom:14px}
+  .lightbox-toggle{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+  .lightbox-toggle button{padding:6px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#fff}
+  .lightbox-toggle button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .lightbox-divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:rgba(255,255,255,.95);box-shadow:0 0 0 1px rgba(15,23,42,.2);cursor:ew-resize;z-index:3;transform:translateX(-50%)}
+  .lightbox-divider::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:#fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .lightbox-divider::before{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;font-size:18px;color:var(--navy);font-weight:700}
+  .extra-thumb{display:inline-block;margin:8px 6px 0 0;border:1px solid var(--border);border-radius:8px;padding:2px;background:#fff}
+  .extra-thumb img{height:70px;display:block;border-radius:6px}
+
+  .footer{max-width:1440px;margin:0 auto;padding:28px;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--border)}
+  .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+  .empty svg{width:48px;height:48px;margin:0 auto 12px;opacity:.4}
+
+  /* ── 投票功能新增樣式 ─────────────────────────────── */
+  .demo-banner{max-width:1440px;margin:0 auto;padding:0 28px}
+  .demo-banner-inner{background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:14px 18px;font-size:13px;color:#9a3412;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+  .demo-banner-inner b{color:#7c2d12}
+
+  .vote-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;width:auto;min-width:90px;height:38px;padding:0 14px;border-radius:10px;background:#f1f5f9;flex-shrink:0;transition:.15s;font-size:12.5px;font-weight:700;color:#64748b;border:1px solid var(--border)}
+  .vote-btn:hover{background:#e2e8f0}
+  .vote-btn svg{width:13px;height:13px;fill:none;stroke:#64748b;stroke-width:2;transition:.15s}
+  .vote-btn.active{background:var(--orange);border-color:var(--orange);color:#fff}
+  .vote-btn.active svg{fill:#fff;stroke:#fff}
+  .vote-btn.disabled{opacity:.4;cursor:not-allowed}
+  .chip[data-cat="voted"]{border-color:#fdba74}
+  .chip[data-cat="voted"].active{background:var(--orange);border-color:var(--orange)}
+
+  .rank-panel{max-width:1440px;margin:0 auto;padding:8px 28px 0}
+  .rank-panel-inner{background:linear-gradient(135deg,var(--navy),#1e3a5f);border-radius:16px;padding:22px 24px;color:#fff}
+  .rank-panel h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .rank-panel h2 .tag{font-size:11px;font-weight:600;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:999px}
+  .rank-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .rank-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border-radius:10px;padding:9px 12px;transition:.2s}
+  .rank-item:hover{background:rgba(255,255,255,.15)}
+  .rank-medal{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;background:rgba(255,255,255,.15)}
+  .rank-name{flex:1;font-size:12.5px;font-weight:600;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+  .vote-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);color:#fff;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
+  .vote-bar-inner{max-width:1440px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .vote-bar-progress{flex:1;min-width:180px}
+  .vote-bar-progress .lbl{font-size:12px;color:#cbd5e1;margin-bottom:6px}
+  .vote-bar-track{height:6px;background:rgba(255,255,255,.15);border-radius:999px;overflow:hidden}
+  .vote-bar-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange2));border-radius:999px;transition:.25s}
+  .vote-submit{padding:11px 22px;background:var(--orange);color:#fff;border-radius:10px;font-size:14px;font-weight:700;transition:.2s;white-space:nowrap}
+  .vote-submit:hover{background:var(--orange2);transform:translateY(-1px)}
+  .vote-submit:disabled{opacity:.35;cursor:not-allowed;transform:none}
+  .vote-reset{padding:11px 16px;font-size:13px;color:#cbd5e1;border:1px solid rgba(255,255,255,.25);border-radius:10px;white-space:nowrap}
+  .vote-reset:hover{color:#fff;border-color:#fff}
+
+  .vote-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:200;background:var(--navy);color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.3s;text-align:center}
+
+  .form-overlay{position:fixed;inset:0;background:rgba(15,23,42,.7);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+  .form-overlay.show{display:flex}
+  .form-overlay-box{background:#fff;border-radius:16px;width:100%;max-width:760px;height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .form-overlay-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .form-overlay-head span{font-weight:700;color:var(--navy);font-size:14px}
+  .form-overlay-close{width:32px;height:32px;border-radius:50%;background:#f1f5f9;font-size:16px;color:#64748b;display:flex;align-items:center;justify-content:center}
+  .form-overlay-close:hover{background:#e2e8f0}
+  .form-overlay-box iframe{flex:1;width:100%;border:0}
+  .vote-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:720px){
+    .hero h1{font-size:28px}
+    .search-box{width:100%;order:3}
+    .topbar-spacer{display:none}
+    .topbar-inner{flex-wrap:wrap}
+    .grid{grid-template-columns:1fr;padding:8px 16px 40px}
+    .hero{padding:32px 20px 16px}
+    .controls{padding:12px 20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/></svg>
+      </div>
+      築匠建築師事務所<small>功能票選</small>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="searchInput" type="text" placeholder="搜尋 Gem 名稱或功能…">
+    </div>
+  </div>
+</header>
+
+<div class="demo-banner">
+  <div class="demo-banner-inner">
+    <span>逛卡片、按「投給它」都只是幫你整理清單。按下方「送出投票」會在<b>同一頁</b>彈出視窗，把你選好的清單自動帶進 <b>Google 表單</b>，你只要登入 Google 帳號、確認清單無誤後按送出即可，不會離開這個網站，也不需要再選一次。① 每人最多選 10 個；② 一個帳號限投一次。</span>
+  </div>
+</div>
+
+<section class="hero">
+  <h1>幫我們選出下一批 <span class="accent">AI 功能</span></h1>
+  <p>瀏覽下面所有 築匠系列 Gem，每張卡片都有實際產出的 <b>Before / After</b> 對比。看到喜歡的功能就按卡片右上角的「投給它」。</p>
+  <p class="notice">每人最多可以選 <b>10 個</b>功能，得票最高的前 10 名，日後將開放 <b>2 週免費試用</b>給大家，請把握機會投票！</p>
+  <div class="hero-meta">
+    <div class="stat"><span class="num" id="totalCount">0</span><span class="lbl">個候選功能</span></div>
+    <div class="stat"><span class="num" id="myVoteCount">0</span><span class="lbl">已投票數 / 10</span></div>
+  </div>
+</section>
+
+<section class="rank-panel">
+  <div class="rank-panel-inner">
+    <h2>🗳 我目前選的功能 <span class="tag">只有你自己看得到，其他人看不到任何人的票數</span></h2>
+    <div class="rank-list" id="rankList"></div>
+  </div>
+</section>
+
+<section class="controls">
+  <div class="chips" id="categoryChips"></div>
+  <div class="mode-toggle" role="tablist" aria-label="互動模式">
+    <button class="mode-btn active" data-mode="slider">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v18M16 3v18"/></svg>
+      滑動對比
+    </button>
+    <button class="mode-btn" data-mode="hover">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+      Hover 切換（點圖放大）
+    </button>
+  </div>
+</section>
+
+<main class="grid slider-mode" id="grid"></main>
+
+<div class="lightbox-overlay" id="lightbox">
+  <div class="lightbox-content">
+    <button class="lightbox-close" aria-label="關閉">✕</button>
+    <div class="lightbox-visual" id="lbVisual"></div>
+    <div class="lightbox-body">
+      <h3 id="lbTitle"></h3>
+      <p id="lbDesc"></p>
+      <div class="lightbox-toggle">
+        <button class="active" data-view="slider">滑動對比</button>
+        <button data-view="before">僅看 Before</button>
+        <button data-view="after">僅看 After</button>
+      </div>
+      <div id="lbExtras"></div>
+      <a class="btn" id="lbLink" target="_blank">啟動此 Gem →</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="padding-bottom:90px">
+  <p>© 築匠建築師事務所(CTArch) ｜ 功能票選頁 單機示範版 v1 ｜ 建置日期 2026-07-29</p>
+  <p style="margin-top:6px">正式上線後票選結果將回饋為前 10 名功能開放 2 週免費試用。</p>
+</footer>
+
+<div class="vote-bar">
+  <div class="vote-bar-inner">
+    <div class="vote-bar-progress">
+      <div class="lbl">已選 <b id="voteBarCount">0</b> / 10 個功能</div>
+      <div class="vote-bar-track"><div class="vote-bar-fill" id="voteBarFill" style="width:0%"></div></div>
+    </div>
+    <button type="button" class="vote-reset" id="voteResetBtn">清空重選</button>
+    <button type="button" class="vote-submit" id="voteSubmitBtn" disabled>送出投票</button>
+  </div>
+</div>
+
+<div class="vote-toast" id="voteToast"></div>
+
+<div class="form-overlay" id="formOverlay">
+  <div class="form-overlay-box">
+    <div class="form-overlay-head">
+      <span>確認下方清單無誤，登入 Google 帳號按「提交」，就算正式完成投票</span>
+      <button type="button" class="form-overlay-close" id="formOverlayClose" aria-label="關閉">✕</button>
+    </div>
+    <iframe id="voteFormFrame" title="投票表單" src="about:blank"></iframe>
+  </div>
+</div>
+
+<script>
+/* ── Gem 資料（V3.0 共 71 個上線：原 42 個 + 新增 29 個）────────────── */
+/* 圖片路徑說明：
+   before01_after02/ → 原有 G-001~G-027 的圖片資料夾
+   測試截圖/         → 新增 G-029 以後的測試截圖
+*/
+var GEMS = [
+  {
+    "num": 1,
+    "id": "1c5d5c5aac22",
+    "href": "https://gemini.google.com/gem/1c5d5c5aac22",
+    "name": "01. CTA-建築造型整合大師(分頁版)-無參考圖",
+    "desc": "從一張照片中擷取造型轉化成建築物",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築造型整合大師(分頁版)-無參考圖-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築造型整合大師(分頁版)-無參考圖-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 2,
+    "id": "c4153a461a44",
+    "href": "https://gemini.google.com/gem/c4153a461a44",
+    "name": "02. CTA-建築設計說明大師-無參考圖面版",
+    "desc": "由一張照片為參考，製作出符合期待的建築物樣態",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築設計說明設計大師-沒有使用額外參考圖面的版本-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築設計說明設計大師-沒有使用額外參考圖面的版本-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 3,
+    "id": "fd1fa853fc6c",
+    "href": "https://gemini.google.com/gem/fd1fa853fc6c",
+    "name": "03. CTA-建築造型轉換工業設計大師-直接搬移版",
+    "desc": "以一張建築圖，可以將其特色重新設計為一個工業設計產品",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-建築造型轉換為工業設計物品大師-直接造型搬移-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築造型轉換為工業設計物品大師-直接造型搬移-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 4,
+    "id": "1rD6Qpzfa-KLJ8mtt7Ekf4UkJjcmDPgRt",
+    "href": "https://gemini.google.com/gem/1rD6Qpzfa-KLJ8mtt7Ekf4UkJjcmDPgRt?usp=sharing",
+    "name": "04. CTA-室內設計大師-由建築轉換版",
+    "desc": "接收使用者提供的任何建築物造型，並將其轉化融入室內設計",
+    "category": "interior",
+    "imgBefore": "before01_after02/「CTA-室內設計大師」-由建築轉換版本-01.jpg",
+    "imgAfter":  "before01_after02/「CTA-室內設計大師」-由建築轉換版本-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 5,
+    "id": "93f5319d5bd8",
+    "href": "https://gemini.google.com/gem/93f5319d5bd8",
+    "name": "05. CTA-建築施工圖大師(GPT版)",
+    "desc": "由一張圖，可以幫我產生完整一套的建築施工圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築施工圖大師(GPT版本)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築施工圖大師(GPT版本)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 6,
+    "id": "e3a1a58c3860",
+    "href": "https://gemini.google.com/gem/e3a1a58c3860",
+    "name": "06. CTA-工業設計大師",
+    "desc": "給一張手繪圖或照片，製作工業設計產品的設計圖",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業設計大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工業設計大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 7,
+    "id": "597eae2d195f",
+    "href": "https://gemini.google.com/gem/597eae2d195f",
+    "name": "07. CTA-建築剖透分析圖大師(單張版)",
+    "desc": "由一張建築物照片變成有說明的剖面透視圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築剖透分析圖(單張圖片版本)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築剖透分析圖(單張圖片版本)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 8,
+    "id": "710bab057a55",
+    "href": "https://gemini.google.com/gem/710bab057a55",
+    "name": "08. CTA-建築剖透分析圖大師(海報版)",
+    "desc": "由一張建築照片提供有海報格式的各種分析圖片",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築剖透分析圖(海報版本)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築剖透分析圖(海報版本)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 9,
+    "id": "ac91d2e59d9c",
+    "href": "https://gemini.google.com/gem/ac91d2e59d9c",
+    "name": "09. CTA-碳足跡海報製作大師",
+    "desc": "由一張圖片製作這建築物的碳足跡海報分析圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-碳足跡海報製作大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-碳足跡海報製作大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 10,
+    "id": "080f0dbc74b4",
+    "href": "https://gemini.google.com/gem/080f0dbc74b4",
+    "name": "10. CTA-建築攝影師-各角度版",
+    "desc": "從一張圖開始以攝影師的視角，拍出各種角度的照片",
+    "category": "photo",
+    "imgBefore": "before01_after02/CTA-建築攝影師-各角度-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築攝影師-各角度-02.jpg",
+    "imgExtra":  "before01_after02/CTA-建築攝影師-各角度-03.jpg"
+  },
+  {
+    "num": 11,
+    "id": "6e85f2b4b7b1",
+    "href": "https://gemini.google.com/gem/6e85f2b4b7b1",
+    "name": "11. CTA-建築設計說明大師",
+    "desc": "由一張建築物照片產出一張具有專業設計排版的建築物設計說明海報",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築設計說明設計大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築設計說明設計大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 12,
+    "id": "0537fe014d21",
+    "href": "https://gemini.google.com/gem/0537fe014d21",
+    "name": "12. CTA-完整建築設計大師",
+    "desc": "由一張圖或是一句話，製作完整的建築設計圖說",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-完整建築設計大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-完整建築設計大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 13,
+    "id": "65ac2acb1bca",
+    "href": "https://gemini.google.com/gem/65ac2acb1bca",
+    "name": "13. CTA-建築完工照攝影師",
+    "desc": "將建築物完工拍攝的照片由專業攝影師修圖",
+    "category": "photo",
+    "imgBefore": "before01_after02/CTA-建築完工照攝影師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築完工照攝影師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 14,
+    "id": "e86a5a962445",
+    "href": "https://gemini.google.com/gem/e86a5a962445",
+    "name": "14. CTA-建築造型整合大師(分頁版)",
+    "desc": "從一張照片中擷取造型轉化成建築物",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築造型整合大師(分頁版)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築造型整合大師(分頁版)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 15,
+    "id": "f0f50c89bd97",
+    "href": "https://gemini.google.com/gem/f0f50c89bd97",
+    "name": "15. CTA-建築物平立剖面圖製造機",
+    "desc": "從一張提供的建築物照片，繪製平立剖面圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築物平立剖面圖製造機-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築物平立剖面圖製造機-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 16,
+    "id": "9e61e6436e3f",
+    "href": "https://gemini.google.com/gem/9e61e6436e3f",
+    "name": "16. CTA-建築施工圖大師(Gemini版)",
+    "desc": "由一張圖，可以幫我產生完整一套的建築施工圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-建築施工圖大師(Gemini版本)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築施工圖大師(Gemini版本)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 17,
+    "id": "6721ccf4684a",
+    "href": "https://gemini.google.com/gem/6721ccf4684a",
+    "name": "17. CTA-室內設計整合大師(單頁版)",
+    "desc": "由一張建築物外觀照片，做出符合設計特色的室內場景",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內設計整合大師(單頁版)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-室內設計整合大師(單頁版)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 18,
+    "id": "52e89e36b5c8",
+    "href": "https://gemini.google.com/gem/52e89e36b5c8",
+    "name": "18. CTA-建築平面轉外觀透視大師",
+    "desc": "提供建築物各樓層的平面圖，直接給你外觀透視",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築平面轉建築外觀透視-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築平面轉建築外觀透視-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 19,
+    "id": "9b6596bdc4e4",
+    "href": "https://gemini.google.com/gem/9b6596bdc4e4",
+    "name": "19. CTA-建築造型轉換工業設計大師-重新設計版",
+    "desc": "由一張建築物圖片，重新解析後再設計成工業設計產品",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-建築造型轉換為工業設計物品大師-造型搬移後重新設計-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築造型轉換為工業設計物品大師-造型搬移後重新設計-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 20,
+    "id": "a56c910f7d11",
+    "href": "https://gemini.google.com/gem/a56c910f7d11",
+    "name": "20. CTA-巴黎藝術學院繪圖風格大師",
+    "desc": "由一張照片為參考，繪製平立剖透視圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-巴黎藝術學院-繪圖風格-01.jpg",
+    "imgAfter":  "before01_after02/CTA-巴黎藝術學院-繪圖風格-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 21,
+    "id": "671cc9128818",
+    "href": "https://gemini.google.com/gem/671cc9128818",
+    "name": "21. CTA-建築立面整合建築師",
+    "desc": "將建築物原有外觀造型參考新的圖片重新設計",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築立面整合建築師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築立面整合建築師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 22,
+    "id": "4dd13c530693",
+    "href": "https://gemini.google.com/gem/4dd13c530693",
+    "name": "22. CTA-建築模型製造機",
+    "desc": "一張圖片變成建築模型",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築模型製造機-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築模型製造機-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 23,
+    "id": "5c67fd106709",
+    "href": "https://gemini.google.com/gem/5c67fd106709",
+    "name": "23. CTA-工業設計大師-等角透視說明版",
+    "desc": "一個等角透視說明的圖片(半透明狀)",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業設計大師-等角透視說明-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工業設計大師-等角透視說明-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 24,
+    "id": "a562fcd4bd80",
+    "href": "https://gemini.google.com/gem/a562fcd4bd80",
+    "name": "24. CTA-室內設計大師",
+    "desc": "提供一張室內圖說，作為空間尺度基底，參考1~5張圖面做新設計",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內設計大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-室內設計大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 25,
+    "id": "a87a92bd740a",
+    "href": "https://gemini.google.com/gem/a87a92bd740a",
+    "name": "25. CTA-建築燈會大師",
+    "desc": "把建築物變成燈籠",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築燈會-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築燈會-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 26,
+    "id": "f55875fb5946",
+    "href": "https://gemini.google.com/gem/f55875fb5946",
+    "name": "26. CTA-建築造型整合大師(單頁版)",
+    "desc": "從一張照片中擷取造型轉化成建築物產生單頁的版本",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築造型整合大師(單頁版)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築造型整合大師(單頁版)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 27,
+    "id": "a5e4bbbb9e38",
+    "href": "https://gemini.google.com/gem/a5e4bbbb9e38",
+    "name": "27. CTA-建築美學大師",
+    "desc": "提供一張建築照片，產生美化過的圖片",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築美學大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築美學大師-02.jpg",
+    "imgExtra":  null
+  },
+  /* ── 新增（V2.2）────────────────────────────── */
+  {
+    "num": 29,
+    "id": "3bb8f344870d",
+    "href": "https://gemini.google.com/gem/3bb8f344870d",
+    "name": "29. CTA-建築海報生成大師-素雅版",
+    "desc": "由建築照片生成素雅風格的建築設計海報",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築海報生成大師-素雅版-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築海報生成大師-素雅版-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 30,
+    "id": "298df42d8cf2",
+    "href": "https://gemini.google.com/gem/298df42d8cf2",
+    "name": "30. CTA-建築海報生成大師",
+    "desc": "由建築照片生成具設計感的建築海報",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築海報產生機-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築海報產生機-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 32,
+    "id": "c3a89aed3ebd",
+    "href": "https://gemini.google.com/gem/c3a89aed3ebd",
+    "name": "32. CTA-室內平面圖視覺化大師(墨線版)",
+    "desc": "將室內平面圖轉換為墨線風格的視覺化圖面",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內平面圖視覺化大師(墨線圖繪製)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-室內平面圖視覺化大師(墨線圖繪製)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 34,
+    "id": "eacaa6883fb4",
+    "href": "https://gemini.google.com/gem/eacaa6883fb4",
+    "name": "34. CTA-室內透視圖說攝影大師",
+    "desc": "將室內透視圖加上角度標示與說明，呈現空間攝影圖說",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內透視圖說攝影大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-室內透視圖說攝影大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 40,
+    "id": "37fae7e3792a",
+    "href": "https://gemini.google.com/gem/37fae7e3792a",
+    "name": "40. CTA-建築等角透視細部構造說明大師",
+    "desc": "將建築物局部以等角透視方式繪製細部構造說明圖",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築物等角透視細部構造設計說明圖說-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築物等角透視細部構造設計說明圖說-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 41,
+    "id": "8063e7825d11",
+    "href": "https://gemini.google.com/gem/8063e7825d11",
+    "name": "41. CTA-通用設計說明圖說大師",
+    "desc": "製作通用設計說明的專業圖說",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-細部構造設計說明圖說-通用設計說明圖說-01.jpg",
+    "imgAfter":  "before01_after02/CTA-細部構造設計說明圖說-通用設計說明圖說-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 42,
+    "id": "1a599202c94f",
+    "href": "https://gemini.google.com/gem/1a599202c94f",
+    "name": "42. CTA-室內墨線圖繪製大師",
+    "desc": "將室內空間以墨線手繪風格重新呈現",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內墨線透視大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-室內墨線透視大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 43,
+    "id": "a3eb113f42b4",
+    "href": "https://gemini.google.com/gem/a3eb113f42b4",
+    "name": "43. CTA-空拍機俯瞰多角度攝影師",
+    "desc": "模擬空拍機俯瞰視角，產出多角度建築攝影圖",
+    "category": "photo",
+    "imgBefore": "before01_after02/CTA-空拍機俯瞰多角度攝影師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-空拍機俯瞰多角度攝影師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 44,
+    "id": "17dc66b335e8",
+    "href": "https://gemini.google.com/gem/17dc66b335e8",
+    "name": "44. CTA-建築設計概念發想拆解大師",
+    "desc": "以一張圖為建築設計發想概念，拆解設計應轉化的細節",
+    "category": "arch",
+    "imgBefore": "測試截圖/20260519-幫我拆解，如果以這張圖為建築設計發想的概念，設計應該轉化的細節-01.png",
+    "imgAfter":  "before01_after02/CTA-建築設計概念拆解大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 45,
+    "id": "c48c9d2bf91e",
+    "href": "https://gemini.google.com/gem/c48c9d2bf91e",
+    "name": "45. CTA-建築設計概念發想大師(原始版)",
+    "desc": "以一張圖為建築設計概念，發想設計轉化細節（原始版本）",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築設計概念發想大師(原始版)-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築設計概念發想大師(原始版)-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 46,
+    "id": "ccc303dc0ebc",
+    "href": "https://gemini.google.com/gem/ccc303dc0ebc",
+    "name": "46. CTA-照片轉細部施工圖大師-V2",
+    "desc": "將照片轉換為細部施工圖立面詳圖分析",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-照片轉細部施工圖大師-V2-01.jpg",
+    "imgAfter":  "before01_after02/CTA-照片轉細部施工圖大師-V2-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 47,
+    "id": "3434c74b01bb",
+    "href": "https://gemini.google.com/gem/3434c74b01bb",
+    "name": "47. CTA-細部構造設計說明圖說大師",
+    "desc": "製作細部構造的等角爆炸圖說明",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-細部構造設計說明圖說大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-細部構造設計說明圖說大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 49,
+    "id": "1d5fd97512c0",
+    "href": "https://gemini.google.com/gem/1d5fd97512c0",
+    "name": "49. CTA-九宮格永續節能分析圖大師",
+    "desc": "以九宮格形式製作建築永續與節能分析圖",
+    "category": "doc",
+    "imgBefore": "before01_after02/CTA-細部構造設計說明圖說-九宮格永續節能分析圖-01.jpg",
+    "imgAfter":  "before01_after02/CTA-細部構造設計說明圖說-九宮格永續節能分析圖-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 50,
+    "id": "89c9796014a6",
+    "href": "https://gemini.google.com/gem/89c9796014a6",
+    "name": "50. CTA-室內等角透視+構解說明大師",
+    "desc": "製作室內等角透視圖並加上基本構造解說明圖",
+    "category": "interior",
+    "imgBefore": "測試截圖/50. CTA-室內等角透視+構解說明大師-01.png",
+    "imgAfter":  "before01_after02/CTA-室內等角透視+構解說明大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": 51,
+    "id": "d94f0e2472a9",
+    "href": "https://gemini.google.com/gem/d94f0e2472a9",
+    "name": "51. CTA-建築物局部透視構造說明大師",
+    "desc": "以等角透視加上A/B/C三細部節點圖，說明建築物局部構造",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築物局部透視構造說明大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築物局部透視構造說明大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "052",
+    "id": "4b21e8f82ba8",
+    "href": "https://gemini.google.com/gem/4b21e8f82ba8",
+    "name": "052. 景觀設計手稿轉鳥瞰渲染大師",
+    "desc": "使用者上傳景觀設計平面圖（手繪草稿、CAD 配置圖或種植計畫圖），Gem 輸出一張約 45～60 度俯角的鳥瞰透視渲染圖，讓業主直觀理解植栽配置與空間感，取代費時費工的手工透視渲染。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/景觀設計手稿轉鳥瞰渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/景觀設計手稿轉鳥瞰渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "053",
+    "id": "c707992c9a69",
+    "href": "https://gemini.google.com/gem/c707992c9a69",
+    "name": "053. 建築外牆材質換裝模擬大師",
+    "desc": "使用者上傳一張建築外觀照片或渲染圖，Gem 輸出以 2×2 排列的四種外牆材質方案對比圖（清水模／木格柵／石材／金屬板），讓設計師在施工前快速預覽不同材料組合的視覺效果，大幅縮短設計提案溝通時間。",
+    "category": "arch",
+    "imgBefore": "before01_after02/建築外牆材質換裝模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/建築外牆材質換裝模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "054",
+    "id": "5a99aea56208",
+    "href": "https://gemini.google.com/gem/5a99aea56208",
+    "name": "054. 老舊建築修復想像圖大師",
+    "desc": "使用者上傳一張老舊、破損或荒廢建築的現況照片，Gem 輸出一張與原始視角完全相同的修復後想像圖——保留歷史特徵、清除破損污漬，用於文化資產保存提案、老屋活化溝通或都市再生計畫的視覺化說明。",
+    "category": "arch",
+    "imgBefore": "before01_after02/老舊建築修復想像圖大師-01.jpg",
+    "imgAfter":  "before01_after02/老舊建築修復想像圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "055",
+    "id": "a5ea647588e4",
+    "href": "https://gemini.google.com/gem/a5ea647588e4",
+    "name": "055. 室內夜景情境燈光渲染大師",
+    "desc": "使用者上傳一張白天拍攝的室內空間照片，Gem 輸出一張相同視角的夜景燈光情境渲染圖——以崁燈、壁燈、燈條等人工光源重新塑造空間氛圍，適用於燈光設計提案、住宅行銷或商業空間視覺化。",
+    "category": "interior",
+    "imgBefore": "before01_after02/室內夜景情境燈光渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/室內夜景情境燈光渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "056",
+    "id": "8fbec67a9b4f",
+    "href": "https://gemini.google.com/gem/8fbec67a9b4f",
+    "name": "056. 土木構造物爆炸剖視圖大師",
+    "desc": "使用者上傳橋梁、擋土牆、道路斷面、涵洞等土木構造物的照片或設計圖，Gem 輸出一張等角透視爆炸剖視技術插圖，標示各層構造名稱（橋面版、PC 大梁、橋墩、基樁、AC 鋪面等），適用於工程教學、施工說明與提案簡報。",
+    "category": "civil",
+    "imgBefore": "before01_after02/土木構造物爆炸剖視圖大師-01.jpg",
+    "imgAfter":  "before01_after02/土木構造物爆炸剖視圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "056-1",
+    "id": "a1ac291fa053",
+    "href": "https://gemini.google.com/gem/a1ac291fa053",
+    "name": "056-1. 土木構造物爆炸剖視圖大師-細致英文說明版本",
+    "desc": "使用者上傳橋梁、擋土牆、道路斷面、涵洞等土木構造物的照片或設計圖，Gem 輸出一張等角透視爆炸剖視技術插圖（英文標示細緻版），標示各層構造名稱，適用於國際工程教學、施工說明與提案簡報。",
+    "category": "civil",
+    "imgBefore": "before01_after02/土木構造物爆炸剖視圖大師-細致英文說明版本-01.jpg",
+    "imgAfter":  "before01_after02/土木構造物爆炸剖視圖大師-細致英文說明版本-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "057",
+    "id": "0aeed56a2a02",
+    "href": "https://gemini.google.com/gem/0aeed56a2a02",
+    "name": "057. CTA-建築草圖水彩渲染大師",
+    "desc": "使用者上傳一張建築鉛筆線稿或手繪草圖，Gem 輸出一幅帶有鬆散筆觸、暖色調渲染的水彩風格建築表現圖，適合簡報提案或競圖說明。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築草圖水彩渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築草圖水彩渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "058",
+    "id": "4e4b377161e1",
+    "href": "https://gemini.google.com/gem/4e4b377161e1",
+    "name": "058. CTA-景觀植栽鳥瞰彩圖大師",
+    "desc": "使用者上傳一張景觀基地平面草圖或空白配置圖，Gem 輸出一幅色彩豐富的景觀鳥瞰植栽平面圖，含樹冠符號、地被紋理、鋪面圖案與水景元素，適合景觀設計提案。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-景觀植栽鳥瞰彩圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-景觀植栽鳥瞰彩圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "059",
+    "id": "e9abbdbf5d49",
+    "href": "https://gemini.google.com/gem/e9abbdbf5d49",
+    "name": "059. CTA-工業設計草稿精致效果圖大師",
+    "desc": "使用者上傳一張產品鉛筆草稿或麥克筆概念圖，Gem 輸出一幅具有真實材質質感（金屬、塑膠、木材等）的精致產品效果圖，適合設計概念發表或客戶提案。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業設計草稿精致效果圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工業設計草稿精致效果圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "060",
+    "id": "4d6fca77f3c9",
+    "href": "https://gemini.google.com/gem/4d6fca77f3c9",
+    "name": "060. CTA-建築外觀四季情境模擬大師",
+    "desc": "使用者上傳一張建築外觀照片，並指定目標季節（春、夏、秋、冬），Gem 輸出同一棟建築在指定季節環境氛圍下的情境模擬圖，含植栽、天空、光線的季節性替換。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築外觀四季情境模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築外觀四季情境模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "061",
+    "id": "517ce91555ea",
+    "href": "https://gemini.google.com/gem/517ce91555ea",
+    "name": "061. CTA-廚衛磁磚拼貼設計模擬大師",
+    "desc": "使用者上傳一張浴室或廚房的牆面、地面現況照片，Gem 輸出同一空間套用不同磁磚圖案與色系後的設計模擬圖，協助業主在施工前直觀確認選材效果。",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-廚衛磁磚拼貼設計模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-廚衛磁磚拼貼設計模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "062",
+    "id": "1d3709377aac",
+    "href": "https://gemini.google.com/gem/1d3709377aac",
+    "name": "062. CTA-建築工地現況轉完工透視圖大師",
+    "desc": "使用者上傳建築工地施工中的現況照片，Gem 依照同一角度與光線，生成一張猜測模擬完工後的外觀透視渲染圖。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築工地現況轉完工透視圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築工地現況轉完工透視圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "063",
+    "id": "b506e48e31c0",
+    "href": "https://gemini.google.com/gem/b506e48e31c0",
+    "name": "063. CTA-植生立面綠牆設計模擬大師",
+    "desc": "使用者上傳建築外牆或室內牆面照片，Gem 在同一視角下模擬加裝垂直綠化植物牆後的視覺效果，展示不同植生搭配方案的落成樣貌，適合建築提案或景觀規劃簡報。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-植生立面綠牆設計模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-植生立面綠牆設計模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "064",
+    "id": "a5cd8f980655",
+    "href": "https://gemini.google.com/gem/a5cd8f980655",
+    "name": "064. 產品零件爆炸透視說明圖大師",
+    "desc": "使用者上傳產品外觀照片或草圖，Gem 生成一張以等角透視呈現的爆炸分件圖，清楚展示各零組件的相對位置與結構關係，適用於說明書、專利圖或設計提案簡報。",
+    "category": "id",
+    "imgBefore": "before01_after02/產品零件爆炸透視說明圖大師-01.jpg",
+    "imgAfter":  "before01_after02/產品零件爆炸透視說明圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "065",
+    "id": "b163e4f0fe77",
+    "href": "https://gemini.google.com/gem/b163e4f0fe77",
+    "name": "065. 城市天際線剪影藝術海報大師",
+    "desc": "使用者上傳一張都市全景或天際線照片，Gem 將其轉化為一張具有視覺衝擊力的剪影藝術海報，以雙色或漸層色彩表現城市輪廓之美，適合展覽、城市宣傳或品牌視覺設計使用。",
+    "category": "photo",
+    "imgBefore": "before01_after02/城市天際線剪影藝術海報大師-01.jpg",
+    "imgAfter":  "before01_after02/城市天際線剪影藝術海報大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "066",
+    "id": "72cab65938d3",
+    "href": "https://gemini.google.com/gem/72cab65938d3",
+    "name": "066. CTA-建築實體模型轉細線墨線稿大師",
+    "desc": "使用者上傳建築實體模型（紙板、保麗龍、木頭或 3D 列印）的照片，Gem 將其轉化為一張精細的手繪風格墨線稿，保留模型的空間層次與細節，適合作品集、展覽或出版使用。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築實體模型轉細線墨線稿大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築實體模型轉細線墨線稿大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "067",
+    "id": "06d36553baba",
+    "href": "https://gemini.google.com/gem/06d36553baba",
+    "name": "067. CTA-手繪平面圖轉等角透視陳設圖大師",
+    "desc": "輸入一張手繪或簡單的室內平面圖，Gem 自動轉換成帶有傢俱陳設的等角透視（Isometric）彩色效果圖，讓平面配置以立體空間感一目了然呈現。",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-手繪平面圖轉等角透視陳設圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-手繪平面圖轉等角透視陳設圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "068",
+    "id": "e98c188dd8cd",
+    "href": "https://gemini.google.com/gem/e98c188dd8cd",
+    "name": "068. CTA-建築外牆植生生態願景圖大師",
+    "desc": "輸入一張建築外觀照片或渲染圖，Gem 將其轉換成充滿綠意植生的生態建築願景圖，呈現垂直綠化、屋頂花園或仿生外牆覆蓋效果，適合競圖提案或永續建築報告使用。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築外牆植生生態願景圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築外牆植生生態願景圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "069",
+    "id": "7c3745c04767",
+    "href": "https://gemini.google.com/gem/7c3745c04767",
+    "name": "069. CTA-橋樑景觀整合透視說明圖大師",
+    "desc": "輸入一張橋樑結構草圖或設計圖，Gem 自動轉換成整合周邊景觀環境的精致彩色透視說明圖，清楚呈現結構形式與景觀融合效果，適合提案報告或環評說明書使用。",
+    "category": "civil",
+    "imgBefore": "before01_after02/CTA-橋樑景觀整合透視說明圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-橋樑景觀整合透視說明圖大師-02.jpg",
+    "imgExtra":  "before01_after02/CTA-橋樑景觀整合透視說明圖大師-03.jpg"
+  },
+  {
+    "num": "070",
+    "id": "472d68f70d78",
+    "href": "https://gemini.google.com/gem/472d68f70d78",
+    "name": "070. CTA-室內空間配色方案對照圖大師",
+    "desc": "輸入一張室內空間照片或白模渲染圖，Gem 自動生成三種不同配色方案的橫向對照圖，幫助業主快速比較各種不同風格色彩計畫。",
+    "category": "interior",
+    "imgBefore": "before01_after02/CTA-室內空間配色方案對照圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-室內空間配色方案對照圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "071",
+    "id": "598c46eb52fe",
+    "href": "https://gemini.google.com/gem/598c46eb52fe",
+    "name": "071. CTA-工業產品材質換裝效果模擬大師",
+    "desc": "輸入一張產品設計圖或實品照片，Gem 自動生成同一產品套用四種不同材質（金屬拉絲、胡桃木、霧面砂質黑、透明壓克力）的 2×2 對照效果圖，加速材質選型決策。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工業產品材質換裝效果模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工業產品材質換裝效果模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "072",
+    "id": "66d534a063b3",
+    "href": "https://gemini.google.com/gem/66d534a063b3",
+    "name": "072. CTA-攝影作品電影感色調風格化大師",
+    "desc": "使用者上傳任意照片，Gem 依指定的電影風格（如韋斯安德森粉彩風、義大利黑色電影、80年代賽博龐克等）調整色相、飽和度、對比與陰影色彩，輸出一張具強烈電影感的風格化成品圖。",
+    "category": "photo",
+    "imgBefore": "before01_after02/CTA-攝影作品電影感色調風格化大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-攝影作品電影感色調風格化大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "074",
+    "id": "407ac22d6734",
+    "href": "https://gemini.google.com/gem/407ac22d6734",
+    "name": "074. CTA-中式庭院造景鳥瞰意境渲染大師",
+    "desc": "使用者上傳一張庭院基地的俯拍照片或手繪平面圖，Gem 置入完整的中式庭院景觀設計元素（假山疊石、悠遊魚池、迴廊、植生等），輸出一張四十五度俯視視角、具水墨意境的彩色鳥瞰渲染圖。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-中式庭院造景鳥瞰意境渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-中式庭院造景鳥瞰意境渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "075",
+    "id": "127809974650",
+    "href": "https://gemini.google.com/gem/127809974650",
+    "name": "075. CTA-工廠設備廠房等角配置說明圖大師",
+    "desc": "使用者上傳一張廠房平面圖手稿或廠房空間照片，Gem 轉化為一張等角透視（Isometric）的廠房設備配置說明圖，各設備以顏色區塊標示、附名稱標籤，並呈現廠房動線規劃。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-工廠設備廠房等角配置說明圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-工廠設備廠房等角配置說明圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "076",
+    "id": "863ae578f9ff",
+    "href": "https://gemini.google.com/gem/863ae578f9ff",
+    "name": "076. CTA-陽台露台植生景觀美化設計圖大師",
+    "desc": "使用者上傳一張開闊或現有陽台、露台的照片，Gem 在保留原始空間結構的前提下，設計並渲染一套完整的植生景觀美化方案，輸出與原圖相同視角的美化後成品圖。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-陽台露台植生景觀美化設計圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-陽台露台植生景觀美化設計圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "077",
+    "id": "86cdb88a7c47",
+    "href": "https://gemini.google.com/gem/86cdb88a7c47",
+    "name": "077. CTA-建築外觀夜間燈光情境渲染大師",
+    "desc": "使用者上傳一張日間建築外觀照片，Gem 輸出同一棟建築在夜間的燈光情境渲染圖，含外牆投光、窗內暖光、環境氛圍光與地面反射效果。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-建築外觀夜間燈光情境渲染大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-建築外觀夜間燈光情境渲染大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "078",
+    "id": "97e01e9a1892",
+    "href": "https://gemini.google.com/gem/97e01e9a1892",
+    "name": "078. CTA-廢棄廠房改造文創空間效果圖大師",
+    "desc": "使用者上傳廢棄廠房或老舊工業空間照片，Gem 輸出改造為藝廊、咖啡廳或共創工作室後的完整效果透視圖，保留工業感語彙並融入新機能。",
+    "category": "arch",
+    "imgBefore": "before01_after02/CTA-廢棄廠房改造文創空間效果圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-廢棄廠房改造文創空間效果圖大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "079",
+    "id": "9d282f66920f",
+    "href": "https://gemini.google.com/gem/9d282f66920f",
+    "name": "079. CTA-景觀水景設計效果模擬大師",
+    "desc": "使用者上傳庭院、廣場或基地照片，Gem 輸出加入水池、湧泉、溪流或瀑布等水景設計後的景觀效果模擬圖。",
+    "category": "landscape",
+    "imgBefore": "before01_after02/CTA-景觀水景設計效果模擬大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-景觀水景設計效果模擬大師-02.jpg",
+    "imgExtra":  null
+  },
+  {
+    "num": "080",
+    "id": "9744ae3d1bc0",
+    "href": "https://gemini.google.com/gem/9744ae3d1bc0",
+    "name": "080. CTA-產品手繪草圖轉品牌展示效果圖大師",
+    "desc": "使用者上傳產品手繪草圖或簡單線稿，Gem 輸出呈現在品牌展示情境中的精美效果圖，含材質、光影與背景佈景。",
+    "category": "id",
+    "imgBefore": "before01_after02/CTA-產品手繪草圖轉品牌展示效果圖大師-01.jpg",
+    "imgAfter":  "before01_after02/CTA-產品手繪草圖轉品牌展示效果圖大師-02.jpg",
+    "imgExtra":  null
+  }
+];
+
+var CATEGORIES = [
+  {key:"all",     label:"全部"},
+  {key:"voted",   label:"🗳 我已投的"},
+  {key:"arch",    label:"建築設計"},
+  {key:"interior",label:"室內設計"},
+  {key:"id",      label:"工業設計"},
+  {key:"doc",     label:"圖說/分析"},
+  {key:"photo",   label:"攝影後製"},
+  {key:"landscape",label:"景觀設計"},
+  {key:"civil",   label:"土木工程"}
+];
+
+var MAX_VOTES = 10;
+
+/* ── 投票（存在使用者自己瀏覽器的 localStorage，單機示範，各人各自獨立）───── */
+var VOTE_KEY = 'ctarch_votes_demo';
+var SUBMITTED_KEY = 'ctarch_votes_submitted_demo';
+
+function getVotes(){
+  try { return new Set(JSON.parse(localStorage.getItem(VOTE_KEY) || '[]')); }
+  catch(e){ return new Set(); }
+}
+function isVoted(id){ return getVotes().has(id); }
+function isSubmitted(){ return localStorage.getItem(SUBMITTED_KEY) === '1'; }
+
+function toggleVote(id){
+  if (isSubmitted()) return isVoted(id);
+  var votes = getVotes();
+  if (votes.has(id)) {
+    votes.delete(id);
+  } else {
+    if (votes.size >= MAX_VOTES) {
+      showToast('最多只能選 '+MAX_VOTES+' 個功能，請先取消其他票再投這個');
+      return votes.has(id);
+    }
+    votes.add(id);
+  }
+  localStorage.setItem(VOTE_KEY, JSON.stringify(Array.from(votes)));
+  return votes.has(id);
+}
+function updateVotedChipCount(){
+  var chip = chipsEl.querySelector('.chip[data-cat="voted"] .count');
+  if (chip) chip.textContent = getVotes().size;
+}
+
+function showToast(msg){
+  var t = document.getElementById('voteToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(function(){ t.classList.remove('show'); }, 2400);
+}
+
+/* ── 只顯示「我自己選的」清單，不顯示任何票數或排行（票選結果不公開）── */
+function renderRankPanel(){
+  var mine = GEMS.filter(function(g){ return isVoted(g.id); });
+  document.getElementById('rankList').innerHTML = mine.length
+    ? mine.map(function(g, idx){
+        return '<div class="rank-item">'
+          + '<div class="rank-medal">'+(idx+1)+'</div>'
+          + '<div class="rank-name">'+esc(g.name.replace(/^\d+\.\s*/,''))+'</div>'
+          + '</div>';
+      }).join('')
+    : '<div style="color:#cbd5e1;font-size:13px">尚未選擇任何功能，瀏覽下方卡片按「投給它」開始選擇</div>';
+}
+
+function renderVoteBar(){
+  var n = getVotes().size;
+  document.getElementById('myVoteCount').textContent = n;
+  document.getElementById('voteBarCount').textContent = n;
+  document.getElementById('voteBarFill').style.width = (n/MAX_VOTES*100)+'%';
+  var submitBtn = document.getElementById('voteSubmitBtn');
+  if (isSubmitted()) {
+    submitBtn.textContent = '已送出投票 ✓';
+    submitBtn.disabled = true;
+  } else {
+    submitBtn.textContent = '送出投票';
+    submitBtn.disabled = n === 0;
+  }
+}
+
+function esc(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function imgHtml(src, alt){
+  if (!src) return '<div class="missing">（尚無對照圖）</div>';
+  return '<img class="lazy" data-src="'+src+'" alt="'+esc(alt)+'" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" loading="lazy">';
+}
+
+/* IntersectionObserver 懶加載 */
+var _lazyObs = null;
+function initLazyLoad(){
+  if (_lazyObs) _lazyObs.disconnect();
+  _lazyObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var img = entry.target;
+        if(img.dataset.src){ img.src = img.dataset.src; delete img.dataset.src; }
+        _lazyObs.unobserve(img);
+      }
+    });
+  }, { rootMargin:'200px' });
+  document.querySelectorAll('img.lazy[data-src]').forEach(function(img){
+    _lazyObs.observe(img);
+  });
+}
+
+function cardHtml(g){
+  var catLabel = {arch:'建築',interior:'室內',id:'工業',doc:'圖說',photo:'攝影',landscape:'景觀',civil:'土木'}[g.category] || '其他';
+  var numBadge = g.num != null ? '<span class="num-badge">'+g.num+'</span>' : '';
+  return '<article class="card" data-cat="'+g.category+'">'
+    +'<div class="visual"'
+    +' data-href="'+esc(g.href)+'"'
+    +' data-title="'+esc(g.name)+'"'
+    +' data-descfull="'+esc(g.desc)+'"'
+    +' data-before="'+esc(g.imgBefore)+'"'
+    +' data-after="'+esc(g.imgAfter)+'"'
+    +' data-id="'+esc(g.id)+'"'
+    +' data-extra="'+esc(g.imgExtra)+'">'
+    +'<div class="layer-before">'+imgHtml(g.imgBefore, g.name+' Before')+'</div>'
+    +'<div class="layer-after">'+imgHtml(g.imgAfter, g.name+' After')+'</div>'
+    +'<div class="divider" aria-hidden="true"></div>'
+    +'<span class="label label-before">Before</span>'
+    +'<span class="label label-after">After</span>'
+    +'</div>'
+    +'<div class="content">'
+    +'<div class="card-header-row">'
+    +numBadge
+    +'<span class="badge '+g.category+'">'+catLabel+'</span>'
+    +'</div>'
+    +'<h3 class="title">'+g.name+'</h3>'
+    +'<p class="desc">'+g.desc+'</p>'
+    +'<div style="display:flex;gap:8px">'
+    +'<a class="btn" style="flex:1" href="'+esc(g.href)+'" target="_blank" rel="noopener" data-id="'+esc(g.id)+'">'
+    +'查看範例'
+    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>'
+    +'</a>'
+    +'<button type="button" class="vote-btn'+(isVoted(g.id)?' active':'')+'" data-vote-id="'+esc(g.id)+'" aria-label="投給這個功能" title="投給這個功能">'
+    +'<svg viewBox="0 0 24 24"><path d="M12 21C12 21 4 14.5 4 9.5C4 6.6 6.3 4.3 9.1 4.3C10.6 4.3 11.6 5 12 5.9C12.4 5 13.4 4.3 14.9 4.3C17.7 4.3 20 6.6 20 9.5C20 14.5 12 21 12 21Z"/></svg>'
+    +(isVoted(g.id) ? '已投給它' : '投給它')
+    +'</button>'
+    +'</div>'
+    +'</div>'
+    +'</article>';
+}
+
+var grid    = document.getElementById('grid');
+var chipsEl = document.getElementById('categoryChips');
+
+CATEGORIES.forEach(function(c) {
+  var count = c.key === 'all' ? GEMS.length
+    : c.key === 'voted' ? getVotes().size
+    : GEMS.filter(function(g){ return g.category === c.key; }).length;
+  var btn = document.createElement('button');
+  btn.className = 'chip' + (c.key === 'all' ? ' active' : '');
+  btn.dataset.cat = c.key;
+  btn.innerHTML = c.label + '<span class="count">'+count+'</span>';
+  chipsEl.appendChild(btn);
+});
+
+function render(){
+  var query     = document.getElementById('searchInput').value.trim().toLowerCase();
+  var activeCat = (document.querySelector('.chip.active') || {}).dataset.cat || 'all';
+  var filtered  = GEMS.filter(function(g) {
+    if (activeCat === 'voted') { if (!isVoted(g.id)) return false; }
+    else if (activeCat !== 'all' && g.category !== activeCat) return false;
+    if (query && !(g.name.toLowerCase().indexOf(query) >= 0 || g.desc.toLowerCase().indexOf(query) >= 0)) return false;
+    return true;
+  });
+  var emptyMsg = activeCat === 'voted' ? '你還沒投任何票，瀏覽下方卡片按「投給它」' : '找不到相符的 Gem';
+  grid.innerHTML = filtered.length
+    ? filtered.map(function(g){ return cardHtml(g); }).join('')
+    : '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>'+emptyMsg+'</p></div>';
+  attachInteractions();
+}
+
+function attachInteractions(){
+  var mode = (document.querySelector('.mode-btn.active') || {}).dataset.mode;
+  if (mode === 'slider') {
+    document.querySelectorAll('.visual').forEach(function(v) {
+      var div   = v.querySelector('.divider');
+      var after = v.querySelector('.layer-after');
+      var lb    = v.querySelector('.label-before');
+      var la    = v.querySelector('.label-after');
+      if (!div || !after) return;
+      var dragging = false;
+      function updateLabels(pct) {
+        if (!lb || !la) return;
+        if (pct < 50)      { lb.style.display='none'; la.style.display=''; }
+        else if (pct > 50) { lb.style.display='';     la.style.display='none'; }
+        else               { lb.style.display='';     la.style.display=''; }
+      }
+      function onMove(e) {
+        if (!dragging) return;
+        var r   = v.getBoundingClientRect();
+        var x   = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+        var pct = Math.max(0, Math.min(100, (x / r.width) * 100));
+        div.style.left               = pct + '%';
+        after.style.clipPath         = 'inset(0 0 0 ' + pct + '%)';
+        updateLabels(pct);
+      }
+      div.addEventListener('mousedown', function(e){ e.preventDefault(); dragging = true; });
+      v.addEventListener('mousedown', function(e){
+        if (e.target === div) return;
+        dragging = true; onMove(e);
+      });
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup',   function(){ dragging = false; });
+      div.addEventListener('touchstart',     function(){ dragging = true; });
+      v.addEventListener('touchmove',        onMove);
+      v.addEventListener('touchend',         function(){ dragging = false; });
+    });
+  }
+  if (mode === 'hover') {
+    document.querySelectorAll('.visual').forEach(function(v) {
+      v.addEventListener('click', function(){ openLightbox(v); });
+    });
+  }
+  initLazyLoad();
+}
+
+/* ── Lightbox ───────────────────────────────────────────── */
+var lightbox = document.getElementById('lightbox');
+var lbVisual = document.getElementById('lbVisual');
+var lbTitle  = document.getElementById('lbTitle');
+var lbDesc   = document.getElementById('lbDesc');
+var lbLink   = document.getElementById('lbLink');
+var lbExtras = document.getElementById('lbExtras');
+
+function openLightbox(v){
+  var before = v.dataset.before, after = v.dataset.after, extra = v.dataset.extra;
+  if (window.trackGemView) window.trackGemView(v.dataset.id);
+  lbTitle.textContent = v.dataset.title;
+  lbDesc.textContent  = v.dataset.descfull;
+  lbLink.href         = v.dataset.href;
+  lbLink.dataset.id   = v.dataset.id;
+  lbVisual.innerHTML  =
+    '<div class="layer-before">'+imgHtml(before,'Before')+'</div>'
+    +'<div class="layer-after" id="lbAfter" style="clip-path:inset(0 0 0 50%)">'+imgHtml(after,'After')+'</div>'
+    +'<span class="label label-before">Before</span>'
+    +'<span class="label label-after">After</span>'
+    +'<div class="lightbox-divider" id="lbDividerX"></div>';
+
+  // 強制載入 lightbox 內的 lazy 圖片
+  lbVisual.querySelectorAll('img.lazy[data-src]').forEach(function(img){
+    img.src = img.dataset.src;
+  });
+
+  lbExtras.innerHTML = (extra && extra !== 'null' && extra !== '')
+    ? '<div style="font-size:12px;color:#64748b;margin-top:6px">更多產出：</div>'
+      +'<a class="extra-thumb" href="'+extra+'" target="_blank"><img src="'+extra+'" alt="額外產出"></a>'
+    : '';
+
+  var divX        = document.getElementById('lbDividerX');
+  var lbAfterEl   = document.getElementById('lbAfter');
+  var lbLblBefore = lbVisual.querySelector('.label-before');
+  var lbLblAfter  = lbVisual.querySelector('.label-after');
+
+  function updateLbLabels(pct) {
+    if (!lbLblBefore || !lbLblAfter) return;
+    if (pct < 50)      { lbLblBefore.style.display='none'; lbLblAfter.style.display=''; }
+    else if (pct > 50) { lbLblBefore.style.display='';     lbLblAfter.style.display='none'; }
+    else               { lbLblBefore.style.display='';     lbLblAfter.style.display=''; }
+  }
+
+  var drag = false;
+  function mv(e) {
+    if (!drag) return;
+    var r   = lbVisual.getBoundingClientRect();
+    var x   = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    var pct = Math.max(0, Math.min(100, (x / r.width) * 100));
+    divX.style.left             = pct + '%';
+    lbAfterEl.style.clipPath    = 'inset(0 0 0 ' + pct + '%)';
+    updateLbLabels(pct);
+  }
+  divX.addEventListener('mousedown',     function(){ drag = true; });
+  lbVisual.addEventListener('mousedown', function(e){ if(e.target===divX) return; drag=true; mv(e); });
+  document.addEventListener('mousemove', mv);
+  document.addEventListener('mouseup',   function(){ drag = false; });
+
+  document.querySelectorAll('.lightbox-toggle button').forEach(function(b) {
+    b.onclick = function() {
+      document.querySelectorAll('.lightbox-toggle button').forEach(function(x){ x.classList.remove('active'); });
+      b.classList.add('active');
+      var view = b.dataset.view;
+      if (view === 'slider') { lbAfterEl.style.clipPath='inset(0 0 0 50%)'; divX.style.left='50%'; divX.style.display='block'; updateLbLabels(50); }
+      if (view === 'before') { lbAfterEl.style.clipPath='inset(0 0 0 100%)'; divX.style.display='none'; updateLbLabels(100); }
+      if (view === 'after')  { lbAfterEl.style.clipPath='inset(0 0 0 0%)';   divX.style.display='none'; updateLbLabels(0); }
+    };
+  });
+
+  lightbox.classList.add('show');
+}
+
+document.querySelector('.lightbox-close').addEventListener('click', function(){ lightbox.classList.remove('show'); });
+lightbox.addEventListener('click', function(e){ if (e.target === lightbox) lightbox.classList.remove('show'); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') lightbox.classList.remove('show'); });
+
+/* ── 投票按鈕：用捕獲階段攔截，避免觸發卡片的滑動對比／開燈箱互動 ── */
+document.addEventListener('mousedown', function(e){
+  if (e.target.closest('.vote-btn')) e.stopPropagation();
+}, true);
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.vote-btn');
+  if (!btn) return;
+  e.stopPropagation();
+  e.preventDefault();
+  if (isSubmitted()) { showToast('你已經送出投票囉，按「清空重選」可以重新投'); return; }
+  var nowActive = toggleVote(btn.dataset.voteId);
+  render();
+  renderRankPanel();
+  renderVoteBar();
+  updateVotedChipCount();
+});
+
+/* ── 正式投票表單（Google表單，需登入、限投一次、結果不公開）── */
+var GOOGLE_FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSeWnxxbDSvPdpVbCKOb9Z5efgyiIX357PFPiSPsbGq2n3d4UA/viewform';
+var GOOGLE_FORM_ENTRY = 'entry.134371582';
+
+/* 表單題目是「文字題」，網站把選好的功能整理成一份清單直接填進去，
+   使用者在表單上只需確認後送出，無法再加選，因此不可能超過 10 個 */
+function buildChosenListText(){
+  var chosenIds = Array.from(getVotes());
+  var names = [];
+  chosenIds.forEach(function(id){
+    var g = GEMS.filter(function(x){ return x.id === id; })[0];
+    if (g) names.push(g.name);
+  });
+  return names.map(function(n, i){ return (i+1) + '. ' + n; }).join('\n');
+}
+
+function buildPrefilledFormUrl(){
+  return GOOGLE_FORM_BASE
+    + '?usp=pp_url&embedded=true&'
+    + GOOGLE_FORM_ENTRY + '=' + encodeURIComponent(buildChosenListText());
+}
+
+var formOverlay = document.getElementById('formOverlay');
+var voteFormFrame = document.getElementById('voteFormFrame');
+
+document.getElementById('voteSubmitBtn').addEventListener('click', function(){
+  if (getVotes().size === 0 || isSubmitted()) return;
+  localStorage.setItem(SUBMITTED_KEY, '1');
+  renderVoteBar();
+  voteFormFrame.src = buildPrefilledFormUrl();
+  formOverlay.classList.add('show');
+});
+
+document.getElementById('formOverlayClose').addEventListener('click', function(){
+  formOverlay.classList.remove('show');
+  voteFormFrame.src = 'about:blank';
+});
+
+document.getElementById('voteResetBtn').addEventListener('click', function(){
+  localStorage.removeItem(VOTE_KEY);
+  localStorage.removeItem(SUBMITTED_KEY);
+  render();
+  renderRankPanel();
+  renderVoteBar();
+  updateVotedChipCount();
+  showToast('已清空所有投票，可以重新選擇');
+});
+
+chipsEl.addEventListener('click', function(e) {
+  var chip = e.target.closest('.chip');
+  if (!chip) return;
+  document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  chip.classList.add('active');
+  render();
+});
+
+document.getElementById('searchInput').addEventListener('input', function(){ render(); });
+
+document.querySelectorAll('.mode-btn').forEach(function(b) {
+  b.addEventListener('click', function() {
+    document.querySelectorAll('.mode-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    grid.className = 'grid ' + b.dataset.mode + '-mode';
+    render();
+  });
+});
+
+render();
+renderRankPanel();
+renderVoteBar();
+document.getElementById('totalCount').textContent = GEMS.length;
+</script>
+
+</body>
+</html>
