@@ -181,6 +181,12 @@
   .form-overlay-close{width:32px;height:32px;border-radius:50%;background:#f1f5f9;font-size:16px;color:#64748b;display:flex;align-items:center;justify-content:center}
   .form-overlay-close:hover{background:#e2e8f0}
   .form-overlay-box iframe{flex:1;width:100%;border:0}
+  .form-overlay-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;border-top:1px solid var(--border);flex-shrink:0;background:#f8fafc;flex-wrap:wrap}
+  .form-alt-link{font-size:13px;color:#0369a1;text-decoration:underline;line-height:1.5}
+  .form-alt-link:hover{color:#075985}
+  .form-done-btn{background:var(--orange);color:#fff;font-weight:700;font-size:14px;padding:10px 20px;border-radius:10px;border:0;cursor:pointer;white-space:nowrap}
+  .form-done-btn:hover{filter:brightness(1.08)}
+  @media(max-width:520px){.form-overlay-foot{flex-direction:column;align-items:stretch}.form-done-btn{width:100%}}
   .vote-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
   @media (max-width:720px){
@@ -214,7 +220,7 @@
 
 <div class="demo-banner">
   <div class="demo-banner-inner">
-    <span>逛卡片、按「投給它」都只是幫你整理清單。按下方「送出投票」會在<b>同一頁</b>彈出視窗，把你選好的清單自動帶進 <b>Google 表單</b>，你只要登入 Google 帳號、確認清單無誤後按送出即可，不會離開這個網站，也不需要再選一次。① 每人最多選 10 個；② 一個帳號限投一次。</span>
+    <span>逛卡片、按「投給它」都只是幫你整理清單。按下方「送出投票」會在<b>同一頁</b>彈出視窗，把你選好的清單自動帶進 <b>Google 表單</b>，你只要留下 Email、確認清單無誤後按<b>「提交」</b>就完成，不用登入、也不需要再選一次。① 每人最多選 10 個；② 提交後才算完成投票，記得按到底。</span>
   </div>
 </div>
 
@@ -330,10 +336,14 @@
 <div class="form-overlay" id="formOverlay">
   <div class="form-overlay-box">
     <div class="form-overlay-head">
-      <span>確認下方清單無誤，登入 Google 帳號按「提交」，就算正式完成投票</span>
+      <span>確認下方清單無誤，填好 Email 後按表單裡的「提交」，才算正式完成投票</span>
       <button type="button" class="form-overlay-close" id="formOverlayClose" aria-label="關閉">✕</button>
     </div>
     <iframe id="voteFormFrame" title="投票表單" src="about:blank"></iframe>
+    <div class="form-overlay-foot">
+      <a class="form-alt-link" id="formOpenNewTab" href="#" target="_blank" rel="noopener">表單沒顯示出來、或是卡住了？點這裡用新分頁開啟表單 →</a>
+      <button type="button" class="form-done-btn" id="formDoneBtn">我已按下提交，完成投票</button>
+    </div>
   </div>
 </div>
 
@@ -1465,18 +1475,36 @@ function buildPrefilledFormUrl(){
 
 var formOverlay = document.getElementById('formOverlay');
 var voteFormFrame = document.getElementById('voteFormFrame');
+var formOpenNewTab = document.getElementById('formOpenNewTab');
+var formDoneBtn = document.getElementById('formDoneBtn');
+
+function closeFormOverlay(){
+  formOverlay.classList.remove('show');
+  voteFormFrame.src = 'about:blank';
+}
 
 document.getElementById('voteSubmitBtn').addEventListener('click', function(){
   if (getVotes().size === 0 || isSubmitted()) return;
-  localStorage.setItem(SUBMITTED_KEY, '1');
-  renderVoteBar();
-  voteFormFrame.src = buildPrefilledFormUrl();
+  /* 這裡「不」標記已送出。必須等使用者真的在表單按過提交、再按彈窗下方的
+     「我已按下提交，完成投票」才算數，否則會發生沒投成功卻顯示已投票的情況 */
+  var url = buildPrefilledFormUrl();
+  voteFormFrame.src = url;
+  formOpenNewTab.href = url;
   formOverlay.classList.add('show');
 });
 
+/* 備援：iframe 內嵌表單在部分環境（例如從 Facebook 開啟的 App 內建瀏覽器）會載不出來，
+   使用者可改用新分頁開啟；回到本頁後按下面這顆按鈕即可記錄為已完成 */
+formDoneBtn.addEventListener('click', function(){
+  localStorage.setItem(SUBMITTED_KEY, '1');
+  renderVoteBar();
+  closeFormOverlay();
+  showToast('感謝你的投票！');
+});
+
 document.getElementById('formOverlayClose').addEventListener('click', function(){
-  formOverlay.classList.remove('show');
-  voteFormFrame.src = 'about:blank';
+  closeFormOverlay();
+  if (!isSubmitted()) showToast('還沒完成喔，要在表單裡按下「提交」才算投票成功');
 });
 
 document.getElementById('voteResetBtn').addEventListener('click', function(){
