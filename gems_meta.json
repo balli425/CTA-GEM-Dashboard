@@ -424,5 +424,221 @@
     "num": "080",
     "name": "080. CTA-產品手繪草圖轉品牌展示效果圖大師",
     "category": "id"
+  },
+  {
+    "id": "b18fd707bca5",
+    "num": "081",
+    "name": "081. CTA-街道空間改造前後對比效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "531747866ddd",
+    "num": "082",
+    "name": "082. CTA-商業門面形象改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "c8a0a3937ce0",
+    "num": "083",
+    "name": "083. CTA-建築外牆損傷標注診斷圖大師",
+    "category": "doc"
+  },
+  {
+    "id": "71f4f5dff7e0",
+    "num": "084",
+    "name": "084. CTA-公路護坡擋土牆景觀美化模擬大師",
+    "category": "special"
+  },
+  {
+    "id": "ea9799a1df1c",
+    "num": "085",
+    "name": "085. CTA-老傢俱翻新改造設計效果圖大師",
+    "category": "id"
+  },
+  {
+    "id": "3664a7ba6a9f",
+    "num": "087",
+    "name": "087. CTA-河濱步道景觀透視情境渲染大師",
+    "category": "special"
+  },
+  {
+    "id": "10526b44c4e2",
+    "num": "088",
+    "name": "088. CTA-都市屋頂農園設計鳥瞰效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "c98d381d114c",
+    "num": "089",
+    "name": "089. CTA-公園廣場鋪面圖案設計鳥瞰大師",
+    "category": "special"
+  },
+  {
+    "id": "a27d89589c6a",
+    "num": "090",
+    "name": "090. CTA-噴水廣場水景設計情境效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "5a74cd70be50",
+    "num": "091",
+    "name": "091. CTA-景觀施工圖轉彩色平面渲染大師",
+    "category": "doc"
+  },
+  {
+    "id": "a153435c6a1d",
+    "num": "092",
+    "name": "092. CTA-建築屋頂太陽能板加裝模擬大師",
+    "category": "special"
+  },
+  {
+    "id": "9a291416bda4",
+    "num": "093",
+    "name": "093. CTA-建築立面光電玻璃幕牆改造大師",
+    "category": "special"
+  },
+  {
+    "id": "26e7e9845da8",
+    "num": "100",
+    "name": "100. CTA-產品包裝視覺陳列提案大師",
+    "category": "id"
+  },
+  {
+    "id": "f786dd4b0db1",
+    "num": "101",
+    "name": "101. CTA-校園老舊教室翻新改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "4286910c788b",
+    "num": "102",
+    "name": "102. CTA-校園體育設施改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "22baff02bbb0",
+    "num": "103",
+    "name": "103. CTA-校園中庭景觀綠化改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "60e6f532a8da",
+    "num": "104",
+    "name": "104. CTA-校園圖書館閱讀空間改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "d5a04431b27a",
+    "num": "095",
+    "name": "095. CTA-綠屋頂雨水回收系統改造模擬大師",
+    "category": "special"
+  },
+  {
+    "id": "6d931f8f7005",
+    "num": "096",
+    "name": "096. CTA-室內設計風格判讀軟裝提案大師",
+    "category": "special"
+  },
+  {
+    "id": "7313e78b7623",
+    "num": "097",
+    "name": "097. CTA-老屋立面拉皮改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "a80855000e7b",
+    "num": "098",
+    "name": "098. CTA-社區入口意象景觀提案大師",
+    "category": "special"
+  },
+  {
+    "id": "38c3fa427319",
+    "num": "099",
+    "name": "099. CTA-土木結構物補強工法示意圖大師",
+    "category": "doc"
+  },
+  {
+    "id": "7412a7fa076d",
+    "num": "106",
+    "name": "106. 醫院候診大廳友善環境改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "df5c7b7c0ed3",
+    "num": "107",
+    "name": "107. 長照機構失智友善空間改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "45b717764dd4",
+    "num": "108",
+    "name": "108. 診所形象門診空間改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "e4b8b06757c4",
+    "num": "110",
+    "name": "110. 老人日照關懷據點空間改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "4dd5464a783e",
+    "num": "111",
+    "name": "111. 捷運站出入口周邊環境改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "51b475a40b6e",
+    "num": "112",
+    "name": "112. 公車候車亭改造設計效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "22b0fd1b2d54",
+    "num": "113",
+    "name": "113. 機場航廈大廳空間設計效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "5f1c3c3069b2",
+    "num": "114",
+    "name": "114. 城市自行車道景觀整合效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "7517251ad9f4",
+    "num": "115",
+    "name": "115. 停車場立體空間綠化改造效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "6ffb788abae0",
+    "num": "116",
+    "name": "116. 舞台場景布景效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "3e0e15d25538",
+    "num": "117",
+    "name": "117. 劇場觀眾席改造設計效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "da7f70f785ff",
+    "num": "118",
+    "name": "118. 舞台燈光情境模擬效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "10ee37293485",
+    "num": "119",
+    "name": "119. 戶外露天劇場景觀整合效果圖大師",
+    "category": "special"
+  },
+  {
+    "id": "7c9db2a4b43d",
+    "num": "120",
+    "name": "120. 多功能文化表演廳空間改造效果圖大師",
+    "category": "special"
   }
 ]
