@@ -92,6 +92,14 @@
   .fav-btn.active svg{fill:var(--orange);stroke:var(--orange)}
   .chip[data-cat="fav"]{border-color:#fdba74}
   .chip[data-cat="fav"].active{background:var(--orange);border-color:var(--orange)}
+  .chip[data-cat="trial"]{border-color:#fca5a5;color:#dc2626}
+  .chip[data-cat="trial"]:hover{border-color:#dc2626;color:#dc2626}
+  .chip[data-cat="trial"].active{background:#dc2626;border-color:#dc2626;color:#fff}
+  .trial-tag{display:inline-flex;align-items:center;gap:4px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+  .trial-tag svg{width:11px;height:11px;flex-shrink:0}
+  .trial-note{display:none;align-items:center;gap:8px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.6}
+  .trial-note.show{display:flex}
+  .trial-note svg{width:18px;height:18px;flex-shrink:0}
 
   .content{padding:18px 18px 16px;flex:1;display:flex;flex-direction:column}
   .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;width:fit-content}
@@ -187,6 +195,11 @@
     </button>
   </div>
 </section>
+
+<div class="trial-note" id="trialNote">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+  <span>以下 <b>10 個 Gem 開放試用中</b>，來源為功能票選前 5 名與實際使用次數前 5 名。試用期間至 <b>8/23</b> 截止，屆時將恢復為僅限訂閱會員使用。</span>
+</div>
 
 <main class="grid slider-mode" id="grid"></main>
 
@@ -1479,9 +1492,27 @@ var GEMS = [
   }
 ];
 
+/* ── 開放試用名單（2026-08-08 起，8/23 截止；8/24 收回時把 TRIAL_IDS 清空即可）──
+   來源：功能票選前 5 名 + 每週使用趨勢前 5 名，重疊者由票選榜往下遞補 */
+var TRIAL_DEADLINE = '8/23';
+var TRIAL_IDS = [
+  'a562fcd4bd80',                       /* 24.  CTA-室內設計大師（票選 No.1）*/
+  'eacaa6883fb4',                       /* 34.  CTA-室內透視圖說攝影大師（票選 No.2）*/
+  '4dd13c530693',                       /* 22.  CTA-建築模型製造機（票選 No.3）*/
+  'c3a89aed3ebd',                       /* 32.  CTA-室內平面圖視覺化大師(墨線版)（票選 No.4）*/
+  '52e89e36b5c8',                       /* 18.  CTA-建築平面轉外觀透視大師（票選 No.5）*/
+  '080f0dbc74b4',                       /* 10.  CTA-建築攝影師-各角度版（票選 No.6，重疊遞補）*/
+  '671cc9128818',                       /* 21.  CTA-建築立面整合建築師（使用 No.1）*/
+  '86cdb88a7c47',                       /* 077. CTA-建築外觀夜間燈光情境渲染大師（使用 No.2）*/
+  '1rD6Qpzfa-KLJ8mtt7Ekf4UkJjcmDPgRt',  /* 04.  CTA-室內設計大師-由建築轉換版（使用 No.3）*/
+  '97e01e9a1892'                        /* 078. CTA-廢棄廠房改造文創空間效果圖大師（使用 No.4）*/
+];
+function isTrial(id){ return TRIAL_IDS.indexOf(id) >= 0; }
+
 var CATEGORIES = [
   {key:"all",     label:"全部"},
   {key:"fav",     label:"❤ 我的最愛"},
+  {key:"trial",   label:"開放試用"},
   {key:"arch",    label:"建築設計"},
   {key:"interior",label:"室內設計"},
   {key:"id",      label:"工業設計"},
@@ -1556,6 +1587,11 @@ function cardHtml(g){
     +'<div class="card-header-row">'
     +numBadge
     +'<span class="badge '+g.category+'">'+catLabel+'</span>'
+    +(isTrial(g.id)
+      ? '<span class="trial-tag" title="試用期間至 '+TRIAL_DEADLINE+' 截止">'
+        +'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>'
+        +'開放試用 · '+TRIAL_DEADLINE+' 截止</span>'
+      : '')
     +'<button type="button" class="fav-btn'+(isFavorite(g.id)?' active':'')+'" data-fav-id="'+esc(g.id)+'" aria-label="加入我的最愛" title="加入我的最愛">'
     +'<svg viewBox="0 0 24 24"><path d="M12 21C12 21 4 14.5 4 9.5C4 6.6 6.3 4.3 9.1 4.3C10.6 4.3 11.6 5 12 5.9C12.4 5 13.4 4.3 14.9 4.3C17.7 4.3 20 6.6 20 9.5C20 14.5 12 21 12 21Z"/></svg>'
     +'</button>'
@@ -1576,6 +1612,7 @@ var chipsEl = document.getElementById('categoryChips');
 CATEGORIES.forEach(function(c) {
   var count = c.key === 'all' ? GEMS.length
     : c.key === 'fav' ? getFavorites().size
+    : c.key === 'trial' ? GEMS.filter(function(g){ return isTrial(g.id); }).length
     : GEMS.filter(function(g){ return g.category === c.key; }).length;
   var btn = document.createElement('button');
   btn.className = 'chip' + (c.key === 'all' ? ' active' : '');
@@ -1589,10 +1626,13 @@ function render(){
   var activeCat = (document.querySelector('.chip.active') || {}).dataset.cat || 'all';
   var filtered  = GEMS.filter(function(g) {
     if (activeCat === 'fav') { if (!isFavorite(g.id)) return false; }
+    else if (activeCat === 'trial') { if (!isTrial(g.id)) return false; }
     else if (activeCat !== 'all' && g.category !== activeCat) return false;
     if (query && !(g.name.toLowerCase().indexOf(query) >= 0 || g.desc.toLowerCase().indexOf(query) >= 0)) return false;
     return true;
   });
+  var noteEl = document.getElementById('trialNote');
+  if (noteEl) noteEl.classList.toggle('show', activeCat === 'trial');
   var emptyMsg = activeCat === 'fav' ? '尚未收藏任何 Gem，點卡片的愛心加入我的最愛' : '找不到相符的 Gem';
   grid.innerHTML = filtered.length
     ? filtered.map(function(g){ return cardHtml(g); }).join('')
