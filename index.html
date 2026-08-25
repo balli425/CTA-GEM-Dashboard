@@ -92,14 +92,6 @@
   .fav-btn.active svg{fill:var(--orange);stroke:var(--orange)}
   .chip[data-cat="fav"]{border-color:#fdba74}
   .chip[data-cat="fav"].active{background:var(--orange);border-color:var(--orange)}
-  .chip[data-cat="trial"]{border-color:#fca5a5;color:#dc2626}
-  .chip[data-cat="trial"]:hover{border-color:#dc2626;color:#dc2626}
-  .chip[data-cat="trial"].active{background:#dc2626;border-color:#dc2626;color:#fff}
-  .trial-tag{display:inline-flex;align-items:center;gap:4px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
-  .trial-tag svg{width:11px;height:11px;flex-shrink:0}
-  .trial-note{display:none;align-items:center;gap:8px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.6}
-  .trial-note.show{display:flex}
-  .trial-note svg{width:18px;height:18px;flex-shrink:0}
 
   .content{padding:18px 18px 16px;flex:1;display:flex;flex-direction:column}
   .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;width:fit-content}
@@ -196,11 +188,6 @@
   </div>
 </section>
 
-<div class="trial-note" id="trialNote">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-  <span>以下 <b>11 個 Gem 開放試用中</b>，來源為功能票選前 5 名與實際使用次數前 5 名。試用期間至 <b>8/23</b> 截止，屆時將恢復為僅限訂閱會員使用。</span>
-</div>
-
 <main class="grid slider-mode" id="grid"></main>
 
 <div class="lightbox-overlay" id="lightbox">
@@ -222,7 +209,7 @@
 </div>
 
 <footer class="footer">
-  <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（V1）｜ 2026-06-16 更新（V2）｜ 2026-07-15 更新（V3，新增 29 個 Gem，共 71 個）｜ 2026-07-24 更新（V3.1，新增「我的最愛」收藏功能）｜ 2026-08-04 更新（V4，新增 36 個 Gem，共 107 個）</p>
+  <p>© 築匠建築師事務所(CTArch) ｜ 2026-04-18 建置（V1）｜ 2026-06-16 更新（V2）｜ 2026-07-15 更新（V3，新增 29 個 Gem，共 71 個）｜ 2026-07-24 更新（V3.1，新增「我的最愛」收藏功能）｜ 2026-08-04 更新（V4，新增 36 個 Gem，共 107 個）｜ 2026-08-25 更新（V5，新增 17 個 Gem，共 124 個，下架開放試用功能）</p>
   <div style="margin-top:16px;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;">
     <span style="font-weight:700;color:var(--navy);">📊 網站觀看人次：</span>
     <div style="display:flex;gap:12px;background:#fff;padding:6px 14px;border:1px solid var(--border);border-radius:9px;box-shadow:0 1px 3px rgba(15,23,42,0.06);">
@@ -1489,18 +1476,199 @@ var GEMS = [
     "imgBefore": "v4_before_after/120-01.jpg",
     "imgAfter": "v4_before_after/120-02.jpg",
     "imgExtra": null
+  },
+  {
+    "num": "121",
+    "id": "6d597de3c5ce",
+    "href": "https://gemini.google.com/gem/6d597de3c5ce",
+    "name": "121. 建築空間黑白攝影藝術風格化大師",
+    "desc": "使用者上傳一張彩色建築外觀、室內空間或都市環境照片，Gem 將其轉換為高對比、層次豐富的黑白藝術攝影作品，呈現大師級黑白建築攝影的戲劇張力與細膩質感。",
+    "category": "photo",
+    "imgBefore": "v5_before_after/121-01.jpg",
+    "imgAfter": "v5_before_after/121-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "123",
+    "id": "cc5871642f81",
+    "href": "https://gemini.google.com/gem/cc5871642f81",
+    "name": "123. 城市夜景長曝光光軌藝術風格化大師",
+    "desc": "使用者上傳一張城市街道、交通要道或建築環境照片（白天或夜間皆可），Gem 將其轉換為充滿動感車流光軌的長曝光夜景藝術攝影作品，呈現光影詩意與城市動態美感。",
+    "category": "photo",
+    "imgBefore": "v5_before_after/123-01.jpg",
+    "imgAfter": "v5_before_after/123-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "124",
+    "id": "1cd835e4c06f",
+    "href": "https://gemini.google.com/gem/1cd835e4c06f",
+    "name": "124. 攝影作品印象派繪畫風格轉換大師",
+    "desc": "使用者上傳一張建築、景觀、街道或空間環境照片，Gem 將其轉換為充滿印象派大師風格的油畫藝術作品，呈現光影斑斕、色彩豐富的點觸筆觸質感。",
+    "category": "photo",
+    "imgBefore": "v5_before_after/124-01.jpg",
+    "imgAfter": "v5_before_after/124-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "125",
+    "id": "f491904d042a",
+    "href": "https://gemini.google.com/gem/f491904d042a",
+    "name": "125. 攝影作品雙重曝光藝術合成大師",
+    "desc": "使用者上傳一張建築外觀、室內空間或都市景觀照片，Gem 將其與最合適的自然元素（森林、星空、水波、花卉）進行雙重曝光藝術合成，創造出充滿詩意的視覺藝術作品。",
+    "category": "photo",
+    "imgBefore": "v5_before_after/125-01.jpg",
+    "imgAfter": "v5_before_after/125-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "126",
+    "id": "baf11cb15451",
+    "href": "https://gemini.google.com/gem/baf11cb15451",
+    "name": "126. 建築功能分區彩色示意圖大師",
+    "desc": "使用者上傳建築平面圖或剖面圖，Gem 輸出依功能屬性（公共空間、私密空間、服務空間、交通空間等）以不同飽和彩色色塊覆蓋各區域的分區示意圖，並在圖面邊緣加上圖例說明，讓空間配置邏輯一目瞭然。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/126-01.jpg",
+    "imgAfter": "v5_before_after/126-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "127",
+    "id": "432cdadb9135",
+    "href": "https://gemini.google.com/gem/432cdadb9135",
+    "name": "127. 建築剖面採光路徑分析圖大師",
+    "desc": "使用者上傳建築剖面圖或外觀照片，Gem 輸出標示自然光進光路徑、採光深度與陰影範圍的分析說明圖，以漸層光帶和箭頭呈現光的走向，協助說明採光策略。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/127-01.jpg",
+    "imgAfter": "v5_before_after/127-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "128",
+    "id": "319c6749df64",
+    "href": "https://gemini.google.com/gem/319c6749df64",
+    "name": "128. 建築平面動線流程疊圖大師",
+    "desc": "使用者上傳建築平面圖，Gem 輸出疊加多條人流動線（訪客、居住者、服務人員）的流程路徑圖，以不同顏色箭頭與路徑線區分各動線層次，清楚說明動線分流邏輯。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/128-01.jpg",
+    "imgAfter": "v5_before_after/128-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "130",
+    "id": "da2b3ab11edc",
+    "href": "https://gemini.google.com/gem/da2b3ab11edc",
+    "name": "130. 建築立面組成元素標注解析圖大師",
+    "desc": "使用者上傳建築立面照片或立面圖，Gem 輸出帶有各立面組成元素（遮陽板、雨遮、窗框系統、外牆材料、欄杆、結構柱等）詳細標注的立面解析說明圖，適合設計報告與施工圖說明使用。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/130-01.jpg",
+    "imgAfter": "v5_before_after/130-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "131",
+    "id": "10af9114fbf3",
+    "href": "https://gemini.google.com/gem/10af9114fbf3",
+    "name": "131. 室內材質板自動生成說明大師",
+    "desc": "使用者上傳一張室內空間照片，Gem 自動識別各表面材質，輸出一張包含材質色塊樣本、名稱標注及適用部位說明的材質板說明圖，協助設計師快速建立材料計畫視覺文件。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/131-01.jpg",
+    "imgAfter": "v5_before_after/131-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "132",
+    "id": "4fa49b6599ec",
+    "href": "https://gemini.google.com/gem/4fa49b6599ec",
+    "name": "132. 室內色彩計畫比例分析圖大師",
+    "desc": "使用者上傳室內透視照片或效果圖，Gem 分析空間色彩組成，輸出主色、輔色、點綴色的比例分配圖與色票組合說明圖，作為設計提案的色彩計畫視覺頁面。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/132-01.jpg",
+    "imgAfter": "v5_before_after/132-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "133",
+    "id": "c67ce4c2b8c6",
+    "href": "https://gemini.google.com/gem/c67ce4c2b8c6",
+    "name": "133. 室內軟裝元素分層爆炸說明圖大師",
+    "desc": "使用者上傳室內照片或透視效果圖，Gem 將室內軟裝拆解為地板層、傢俱層、燈具層、配件層等四個層次，輸出等角透視式的分層爆炸說明圖，清晰呈現軟裝搭配的層次邏輯。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/133-01.jpg",
+    "imgAfter": "v5_before_after/133-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "134",
+    "id": "b7c03e950426",
+    "href": "https://gemini.google.com/gem/b7c03e950426",
+    "name": "134. 室內施工界面分色說明圖大師",
+    "desc": "使用者上傳室內平面圖、立面圖或施工照片，Gem 依施工類別以不同顏色標注各界面範圍，輸出木作、泥作、地板、水電等施工界面分色說明圖，協助工程發包前的界面確認作業。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/134-01.jpg",
+    "imgAfter": "v5_before_after/134-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "135",
+    "id": "fa6c801a9fb0",
+    "href": "https://gemini.google.com/gem/fa6c801a9fb0",
+    "name": "135. 室內設計風格元素解構說明圖大師",
+    "desc": "使用者上傳室內照片或效果圖，Gem 識別設計風格並以引線標注各關鍵元素的風格特徵，輸出附有風格名稱與特徵摘要的元素解構說明圖，協助設計師清晰傳達設計語彙。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/135-01.jpg",
+    "imgAfter": "v5_before_after/135-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "136",
+    "id": "00b375192030",
+    "href": "https://gemini.google.com/gem/00b375192030",
+    "name": "136. 景觀植栽分類標注分析圖大師",
+    "desc": "使用者上傳一張景觀平面圖或現況植栽照片，Gem 輸出疊加喬木／灌木／地被草本等分類色塊標注、植物特性說明的景觀植栽分析圖。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/136-01.jpg",
+    "imgAfter": "v5_before_after/136-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "137",
+    "id": "4e4d3d523694",
+    "href": "https://gemini.google.com/gem/4e4d3d523694",
+    "name": "137. 景觀動線節點分析疊圖大師",
+    "desc": "使用者上傳一張景觀設計平面圖或基地鳥瞰照片，Gem 輸出疊加主次動線箭頭、景觀節點、休憩聚集區等符號的動線分析說明圖。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/137-01.jpg",
+    "imgAfter": "v5_before_after/137-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "139",
+    "id": "db9d680e14eb",
+    "href": "https://gemini.google.com/gem/db9d680e14eb",
+    "name": "139. 景觀設施人因尺度分析圖大師",
+    "desc": "使用者上傳一張景觀設施設計圖或現況照片（座椅、步道、燈具、欄杆等），Gem 輸出疊加人形比例符號與各項尺度標注說明的人因分析圖。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/139-01.jpg",
+    "imgAfter": "v5_before_after/139-02.jpg",
+    "imgExtra": null
+  },
+  {
+    "num": "140",
+    "id": "",
+    "href": "",
+    "name": "140. 景觀雨水管理剖面構造說明圖大師",
+    "desc": "使用者上傳一張景觀設計剖面圖或現場照片，Gem 輸出以剖面形式呈現透水鋪面、滯洪設施、植生滲透層等雨水管理構造的分層標注說明圖。",
+    "category": "doc",
+    "imgBefore": "v5_before_after/140-01.jpg",
+    "imgAfter": "v5_before_after/140-02.jpg",
+    "imgExtra": null
   }
 ];
-
-/* ── 開放試用名單（2026-08-08 起，8/23 截止；2026-08-25 已收回，TRIAL_IDS 清空）── */
-var TRIAL_DEADLINE = '8/23';
-var TRIAL_IDS = [];
-function isTrial(id){ return TRIAL_IDS.indexOf(id) >= 0; }
 
 var CATEGORIES = [
   {key:"all",     label:"全部"},
   {key:"fav",     label:"❤ 我的最愛"},
-  {key:"trial",   label:"開放試用"},
   {key:"arch",    label:"建築設計"},
   {key:"interior",label:"室內設計"},
   {key:"id",      label:"工業設計"},
@@ -1575,21 +1743,18 @@ function cardHtml(g){
     +'<div class="card-header-row">'
     +numBadge
     +'<span class="badge '+g.category+'">'+catLabel+'</span>'
-    +(isTrial(g.id)
-      ? '<span class="trial-tag" title="試用期間至 '+TRIAL_DEADLINE+' 截止">'
-        +'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>'
-        +'開放試用 · '+TRIAL_DEADLINE+' 截止</span>'
-      : '')
     +'<button type="button" class="fav-btn'+(isFavorite(g.id)?' active':'')+'" data-fav-id="'+esc(g.id)+'" aria-label="加入我的最愛" title="加入我的最愛">'
     +'<svg viewBox="0 0 24 24"><path d="M12 21C12 21 4 14.5 4 9.5C4 6.6 6.3 4.3 9.1 4.3C10.6 4.3 11.6 5 12 5.9C12.4 5 13.4 4.3 14.9 4.3C17.7 4.3 20 6.6 20 9.5C20 14.5 12 21 12 21Z"/></svg>'
     +'</button>'
     +'</div>'
     +'<h3 class="title">'+g.name+'</h3>'
     +'<p class="desc">'+g.desc+'</p>'
-    +'<a class="btn" href="'+esc(g.href)+'" target="_blank" rel="noopener" data-id="'+esc(g.id)+'">'
-    +'啟動此 Gem'
-    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>'
-    +'</a>'
+    +(g.href
+      ? '<a class="btn" href="'+esc(g.href)+'" target="_blank" rel="noopener" data-id="'+esc(g.id)+'">'
+        +'啟動此 Gem'
+        +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>'
+        +'</a>'
+      : '<span class="btn" style="opacity:.55;cursor:default;pointer-events:none">連結補登中</span>')
     +'</div>'
     +'</article>';
 }
@@ -1600,7 +1765,6 @@ var chipsEl = document.getElementById('categoryChips');
 CATEGORIES.forEach(function(c) {
   var count = c.key === 'all' ? GEMS.length
     : c.key === 'fav' ? getFavorites().size
-    : c.key === 'trial' ? GEMS.filter(function(g){ return isTrial(g.id); }).length
     : GEMS.filter(function(g){ return g.category === c.key; }).length;
   var btn = document.createElement('button');
   btn.className = 'chip' + (c.key === 'all' ? ' active' : '');
@@ -1614,13 +1778,10 @@ function render(){
   var activeCat = (document.querySelector('.chip.active') || {}).dataset.cat || 'all';
   var filtered  = GEMS.filter(function(g) {
     if (activeCat === 'fav') { if (!isFavorite(g.id)) return false; }
-    else if (activeCat === 'trial') { if (!isTrial(g.id)) return false; }
     else if (activeCat !== 'all' && g.category !== activeCat) return false;
     if (query && !(g.name.toLowerCase().indexOf(query) >= 0 || g.desc.toLowerCase().indexOf(query) >= 0)) return false;
     return true;
   });
-  var noteEl = document.getElementById('trialNote');
-  if (noteEl) noteEl.classList.toggle('show', activeCat === 'trial');
   var emptyMsg = activeCat === 'fav' ? '尚未收藏任何 Gem，點卡片的愛心加入我的最愛' : '找不到相符的 Gem';
   grid.innerHTML = filtered.length
     ? filtered.map(function(g){ return cardHtml(g); }).join('')
